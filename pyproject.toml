@@ -16,4 +16,4 @@ exclude = ["build"]
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["D", "ANN101", "ANN102"]
+ignore = ["D", "EM", "ANN101", "ANN102", "TRY003"]

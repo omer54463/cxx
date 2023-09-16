@@ -5,5 +5,5 @@ from surgeon.statement.statement import Statement
 
 
 @dataclass
-class CompountStatement(Statement):
+class ExpressionStatement(Statement):
     expression: Expression
