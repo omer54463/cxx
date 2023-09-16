@@ -6,4 +6,4 @@ from surgeon.statement.jump_statement.jump_statement import JumpStatement
 
 @dataclass
 class ReturnStatement(JumpStatement):
-    value: Expression
+    value: Expression | None = None
