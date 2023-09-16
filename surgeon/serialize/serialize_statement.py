@@ -62,9 +62,6 @@ def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
         case NullStatement():
             yield [";"]
 
-        case _:
-            raise TypeError(f"Unsupported statement type {type(statement)}")
-
 
 def serialize_optional_statement(
     statement: Statement | None,

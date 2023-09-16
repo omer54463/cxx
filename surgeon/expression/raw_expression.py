@@ -4,5 +4,5 @@ from surgeon.expression.expression import Expression
 
 
 @dataclass
-class ConstantExpression(Expression):
-    pass
+class RawExpression(Expression):
+    content: str

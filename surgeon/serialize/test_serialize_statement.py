@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 import pytest
 
-from surgeon.expression.constant_expression import ConstantExpression
+from surgeon.expression.raw_expression import RawExpression
 from surgeon.serialize.serialize_statement import serialize_statement
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.expression_statement import ExpressionStatement
@@ -31,12 +31,12 @@ from surgeon.statement.statement import Statement
 
 BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (NullStatement(), [[";"]]),
-    (ExpressionStatement(ConstantExpression("test")), [["test", ";"]]),
+    (ExpressionStatement(RawExpression("test")), [["test", ";"]]),
     (
         CompountStatement(
             [
-                ExpressionStatement(ConstantExpression("statement_1")),
-                ExpressionStatement(ConstantExpression("statement_2")),
+                ExpressionStatement(RawExpression("statement_1")),
+                ExpressionStatement(RawExpression("statement_2")),
             ],
         ),
         [["{"], ["statement_1", ";"], ["statement_2", ";"], ["}"]],
@@ -46,23 +46,23 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         DoWhileStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
         ),
         [["do"], ["content", ";"], ["while", "(", "condition", ")", ";"]],
     ),
     (
         ForStatement(
-            ExpressionStatement(ConstantExpression("initialize")),
-            ExpressionStatement(ConstantExpression("content")),
-            ConstantExpression("condition"),
+            ExpressionStatement(RawExpression("initialize")),
+            ExpressionStatement(RawExpression("content")),
+            RawExpression("condition"),
         ),
         [["for", "(", "initialize", ";", "condition", ";", ")"], ["content", ";"]],
     ),
     (
         WhileStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
         ),
         [["while", "(", "condition", ")"], ["content", ";"]],
     ),
@@ -76,7 +76,7 @@ JUMP_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 )
 
 LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    (CaseStatement(ConstantExpression("value")), [["case", "value", ":"]]),
+    (CaseStatement(RawExpression("value")), [["case", "value", ":"]]),
     (DefaultStatement(), [["default", ":"]]),
     (GotoTargetStatement("label"), [["label", ":"]]),
 )
@@ -84,9 +84,9 @@ LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         IfConstexprElseStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
-            ExpressionStatement(ConstantExpression("else_content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
+            ExpressionStatement(RawExpression("else_content")),
         ),
         [
             ["if", "constexpr", "(", "condition", ")"],
@@ -97,16 +97,16 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         IfConstexprStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
         ),
         [["if", "constexpr", "(", "condition", ")"], ["content", ";"]],
     ),
     (
         IfElseStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
-            ExpressionStatement(ConstantExpression("else_content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
+            ExpressionStatement(RawExpression("else_content")),
         ),
         [
             ["if", "(", "condition", ")"],
@@ -117,8 +117,8 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         IfStatement(
-            ConstantExpression("condition"),
-            ExpressionStatement(ConstantExpression("content")),
+            RawExpression("condition"),
+            ExpressionStatement(RawExpression("content")),
         ),
         [["if", "(", "condition", ")"], ["content", ";"]],
     ),
