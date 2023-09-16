@@ -7,7 +7,7 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class ForStatement(IterationStatement):
-    initialization: Expression
-    condition: Expression
-    advancement: Expression
+    initialization: Statement
     content: Statement
+    condition: Expression | None = None
+    progression: Expression | None = None
