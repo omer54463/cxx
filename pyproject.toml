@@ -7,7 +7,7 @@ authors = [{ name = "Omer Lubin", email = "omer.lubin.1337@gmail.com" }]
 dependencies = ["case-converter"]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "black", "ruff", "mypy"]
+dev = ["pre-commit", "black", "ruff", "mypy", "pytest"]
 
 [tool.mypy]
 strict = true
@@ -17,3 +17,6 @@ exclude = ["build"]
 [tool.ruff]
 select = ["ALL"]
 ignore = ["D", "EM", "ANN101", "ANN102", "TRY003"]
+
+[tool.ruff.per-file-ignores]
+"test_*.py" = ["S101"]

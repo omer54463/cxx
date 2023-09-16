@@ -6,13 +6,16 @@ repos:
         language: system
         entry: mypy
         types: [python]
+        require_serial: true
       - id: black
         name: black
         language: system
         entry: black --check
         types: [python]
+        require_serial: true
       - id: ruff
         name: ruff
         language: system
         entry: ruff
         types: [python]
+        require_serial: true

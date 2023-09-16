@@ -11,4 +11,3 @@ class IfElseStatement(SelectionStatement):
     content: Statement
     else_content: Statement
     initialization: Statement | None = None
-    constexpr: bool = False

@@ -6,7 +6,8 @@ from surgeon.statement.statement import Statement
 
 
 @dataclass
-class IfStatement(SelectionStatement):
+class IfConstexprElseStatement(SelectionStatement):
     condition: Expression
     content: Statement
+    else_content: Statement
     initialization: Statement | None = None
