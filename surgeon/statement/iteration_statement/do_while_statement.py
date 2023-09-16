@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 
 from surgeon.expression.expression import Expression
-from surgeon.statement.selection_statement.selection_statement import SelectionStatement
+from surgeon.statement.iteration_statement.iteration_statement import IterationStatement
 from surgeon.statement.statement import Statement
 
 
 @dataclass
-class IfStatement(SelectionStatement):
+class DoWhileStatement(IterationStatement):
+    content: Statement
     condition: Expression
-    statement: Statement

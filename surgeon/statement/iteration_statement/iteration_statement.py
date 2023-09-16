@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+from surgeon.statement.statement import Statement
+
 
 @dataclass
-class Statement:
+class IterationStatement(Statement):
     def __post_init__(self) -> None:
-        if type(self) == Statement:
+        if type(self) == IterationStatement:
             raise TypeError("Don't use this class - use a subclass.")

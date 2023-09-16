@@ -5,4 +5,4 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class CompountStatement(Statement):
-    statements: list[Statement]
+    content: list[Statement]

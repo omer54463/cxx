@@ -6,4 +6,4 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class ExpressionStatement(Statement):
-    expression: Expression
+    content: Expression

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
+from surgeon.statement.statement import Statement
+
 
 @dataclass
-class Statement:
+class JumpStatement(Statement):
     def __post_init__(self) -> None:
-        if type(self) == Statement:
+        if type(self) == JumpStatement:
             raise TypeError("Don't use this class - use a subclass.")

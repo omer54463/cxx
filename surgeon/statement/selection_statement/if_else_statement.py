@@ -1,11 +1,12 @@
+from ast import Expression
 from dataclasses import dataclass
 
-from surgeon.expression.expression import Expression
 from surgeon.statement.selection_statement.selection_statement import SelectionStatement
 from surgeon.statement.statement import Statement
 
 
 @dataclass
-class IfStatement(SelectionStatement):
+class IfElseStatement(SelectionStatement):
     condition: Expression
-    statement: Statement
+    then_statement: Statement
+    else_statement: Statement
