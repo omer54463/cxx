@@ -1,0 +1,17 @@
+[project]
+name = "surgeon"
+description = "A C/C++ source generation library."
+version = "0.1.0"
+requires-python = ">3.11"
+authors = [{ name = "Omer Lubin", email = "omer.lubin.1337@gmail.com" }]
+dependencies = ["case-converter"]
+
+[project.optional-dependencies]
+dev = ["pre-commit", "black", "ruff", "mypy"]
+
+[tool.mypy]
+strict = true
+pretty = true
+
+[tool.ruff]
+select = ["ALL"]
