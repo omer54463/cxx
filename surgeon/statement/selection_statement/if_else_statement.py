@@ -1,6 +1,6 @@
-from ast import Expression
 from dataclasses import dataclass
 
+from surgeon.expression.expression import Expression
 from surgeon.statement.selection_statement.selection_statement import SelectionStatement
 from surgeon.statement.statement import Statement
 
@@ -8,5 +8,7 @@ from surgeon.statement.statement import Statement
 @dataclass
 class IfElseStatement(SelectionStatement):
     condition: Expression
-    then_statement: Statement
-    else_statement: Statement
+    content: Statement
+    else_content: Statement
+    initialization: Statement | None = None
+    constexpr: bool = False

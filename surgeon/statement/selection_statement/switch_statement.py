@@ -8,4 +8,5 @@ from surgeon.statement.statement import Statement
 @dataclass
 class SwitchStatement(SelectionStatement):
     value: Expression
-    statement: Statement
+    content: Statement
+    initialization: Statement | None = None

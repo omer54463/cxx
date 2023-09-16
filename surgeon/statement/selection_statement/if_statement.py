@@ -8,4 +8,6 @@ from surgeon.statement.statement import Statement
 @dataclass
 class IfStatement(SelectionStatement):
     condition: Expression
-    statement: Statement
+    content: Statement
+    initialization: Statement | None = None
+    constexpr: bool = False
