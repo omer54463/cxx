@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from itertools import chain
 
 from surgeon.serialize.flatten_lines import flatten_lines
 from surgeon.serialize.serialize_expression import (
@@ -51,16 +52,16 @@ def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
             yield from serialize_selection_statement(statement)
 
         case CompountStatement(content):
-            yield ["{"]
+            yield ("{",)
             for sub_statement in statement.content:
                 yield from serialize_statement(sub_statement)
-            yield ["}"]
+            yield ("}",)
 
         case ExpressionStatement(content):
-            yield [*serialize_expression(content), ";"]
+            yield chain(serialize_expression(content), (";",))
 
         case NullStatement():
-            yield [";"]
+            yield (";",)
 
 
 def serialize_optional_statement(
@@ -75,24 +76,23 @@ def serialize_iteration_statement(
 ) -> Iterable[Iterable[str]]:
     match statement:
         case DoWhileStatement(condition, content):
-            yield ["do"]
+            yield ("do",)
             yield from serialize_statement(content)
-            yield ["while", "(", *serialize_expression(condition), ")", ";"]
+            yield chain(("while", "("), serialize_expression(condition), (")", ";"))
 
         case ForStatement(initialization, content, condition, progression):
-            yield [
-                "for",
-                "(",
-                *flatten_lines(serialize_statement(initialization)),
-                *serialize_optional_expression(condition),
-                ";",
-                *serialize_optional_expression(progression),
-                ")",
-            ]
+            yield chain(
+                ("for", "("),
+                flatten_lines(serialize_statement(initialization)),
+                serialize_optional_expression(condition),
+                (";",),
+                serialize_optional_expression(progression),
+                (")"),
+            )
             yield from serialize_statement(content)
 
         case WhileStatement(condition, content):
-            yield ["while", "(", *serialize_expression(condition), ")"]
+            yield chain(("while", "("), serialize_expression(condition), (")",))
             yield from serialize_statement(content)
 
 
@@ -101,16 +101,16 @@ def serialize_jump_statement(
 ) -> Iterable[Iterable[str]]:
     match statement:
         case BreakStatement():
-            yield ["break", ";"]
+            yield ("break", ";")
 
         case ContinueStatement():
-            yield ["continue", ";"]
+            yield ("continue", ";")
 
         case GotoStatement(identifier):
-            yield ["goto", identifier, ";"]
+            yield ("goto", identifier, ";")
 
         case ReturnStatement(value):
-            yield ["return", *serialize_optional_expression(value), ";"]
+            yield chain(("return",), serialize_optional_expression(value), (";",))
 
 
 def serialize_labeled_statement(
@@ -118,13 +118,13 @@ def serialize_labeled_statement(
 ) -> Iterable[Iterable[str]]:
     match statement:
         case CaseStatement(value):
-            yield ["case", *serialize_expression(value), ":"]
+            yield chain(("case",), serialize_expression(value), (":",))
 
         case DefaultStatement():
-            yield ["default", ":"]
+            yield ("default", ":")
 
         case GotoTargetStatement(identifier):
-            yield [identifier, ":"]
+            yield (identifier, ":")
 
 
 def serialize_selection_statement(
@@ -132,57 +132,50 @@ def serialize_selection_statement(
 ) -> Iterable[Iterable[str]]:
     match statement:
         case IfConstexprElseStatement(condition, content, else_content, initialization):
-            yield [
-                "if",
-                "constexpr",
-                "(",
-                *flatten_lines(serialize_optional_statement(initialization)),
-                *serialize_expression(condition),
-                ")",
-            ]
+            yield chain(
+                ("if", "constexpr", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_expression(condition),
+                (")",),
+            )
             yield from serialize_statement(content)
-            yield ["else"]
+            yield ("else",)
             yield from serialize_statement(else_content)
 
         case IfConstexprStatement(condition, content, initialization):
-            yield [
-                "if",
-                "constexpr",
-                "(",
-                *flatten_lines(serialize_optional_statement(initialization)),
-                *serialize_expression(condition),
-                ")",
-            ]
+            yield chain(
+                ("if", "constexpr", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_expression(condition),
+                (")",),
+            )
             yield from serialize_statement(content)
 
         case IfElseStatement(condition, content, else_content, initialization):
-            yield [
-                "if",
-                "(",
-                *flatten_lines(serialize_optional_statement(initialization)),
-                *serialize_expression(condition),
-                ")",
-            ]
+            yield chain(
+                ("if", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_expression(condition),
+                (")",),
+            )
             yield from serialize_statement(content)
-            yield ["else"]
+            yield ("else",)
             yield from serialize_statement(else_content)
 
         case IfStatement(condition, content, initialization):
-            yield [
-                "if",
-                "(",
-                *flatten_lines(serialize_optional_statement(initialization)),
-                *serialize_expression(condition),
-                ")",
-            ]
+            yield chain(
+                ("if", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_expression(condition),
+                (")"),
+            )
             yield from serialize_statement(content)
 
         case SwitchStatement(value, content, initialization):
-            yield [
-                "switch",
-                "(",
-                *flatten_lines(serialize_optional_statement(initialization)),
-                *serialize_expression(value),
-                ")",
-            ]
+            yield chain(
+                ("switch", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_expression(value),
+                (")",),
+            )
             yield from serialize_statement(content)
