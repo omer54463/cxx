@@ -2,6 +2,7 @@ from collections.abc import Iterable
 from itertools import chain
 
 from surgeon.serialize.flatten_lines import flatten_lines
+from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.serialize.serialize_expression import (
     serialize_expression,
     serialize_optional_expression,
@@ -9,6 +10,7 @@ from surgeon.serialize.serialize_expression import (
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
+from surgeon.statement.iteration_statement.for_range_expression import ForRangeStatement
 from surgeon.statement.iteration_statement.for_statement import ForStatement
 from surgeon.statement.iteration_statement.iteration_statement import IterationStatement
 from surgeon.statement.iteration_statement.while_statement import WhileStatement
@@ -63,6 +65,9 @@ def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
         case NullStatement():
             yield (";",)
 
+        case _:
+            raise TypeError(f"Unexpected type {type(statement)}")
+
 
 def serialize_optional_statement(
     statement: Statement | None,
@@ -80,6 +85,17 @@ def serialize_iteration_statement(
             yield from serialize_statement(content)
             yield chain(("while", "("), serialize_expression(condition), (")", ";"))
 
+        case ForRangeStatement(value, range, content, initialization):
+            yield chain(
+                ("for", "("),
+                flatten_lines(serialize_optional_statement(initialization)),
+                serialize_declaration(value),
+                (":",),
+                serialize_expression(range),
+                (")"),
+            )
+            yield from serialize_statement(content)
+
         case ForStatement(initialization, content, condition, progression):
             yield chain(
                 ("for", "("),
@@ -94,6 +110,9 @@ def serialize_iteration_statement(
         case WhileStatement(condition, content):
             yield chain(("while", "("), serialize_expression(condition), (")",))
             yield from serialize_statement(content)
+
+        case _:
+            raise TypeError(f"Unexpected type {type(statement)}")
 
 
 def serialize_jump_statement(
@@ -112,6 +131,9 @@ def serialize_jump_statement(
         case ReturnStatement(value):
             yield chain(("return",), serialize_optional_expression(value), (";",))
 
+        case _:
+            raise TypeError(f"Unexpected type {type(statement)}")
+
 
 def serialize_labeled_statement(
     statement: LabeledStatement,
@@ -125,6 +147,9 @@ def serialize_labeled_statement(
 
         case GotoTargetStatement(identifier):
             yield (identifier, ":")
+
+        case _:
+            raise TypeError(f"Unexpected type {type(statement)}")
 
 
 def serialize_selection_statement(
@@ -179,3 +204,6 @@ def serialize_selection_statement(
                 (")",),
             )
             yield from serialize_statement(content)
+
+        case _:
+            raise TypeError(f"Unexpected type {type(statement)}")

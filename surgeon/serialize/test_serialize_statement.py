@@ -4,7 +4,11 @@ from dataclasses import dataclass
 import pytest
 import pytest_mock
 
+from surgeon.declaration.declaration import Declaration
 from surgeon.expression.expression import Expression
+from surgeon.serialize import (
+    serialize_declaration as serialize_declaration_module,
+)
 from surgeon.serialize import (
     serialize_expression as serialize_expression_module,
 )
@@ -15,6 +19,7 @@ from surgeon.serialize.serialize_statement import serialize_statement
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
+from surgeon.statement.iteration_statement.for_range_expression import ForRangeStatement
 from surgeon.statement.iteration_statement.for_statement import ForStatement
 from surgeon.statement.iteration_statement.while_statement import WhileStatement
 from surgeon.statement.jump_statement.break_statement import BreakStatement
@@ -58,6 +63,26 @@ def mock_serialize_expression(module_mocker: pytest_mock.MockerFixture) -> None:
         )
 
 
+@dataclass
+class FakeDeclaration(Declaration):
+    content: str
+
+
+def fake_serialize_declaration(declaration: Declaration) -> Iterable[str]:
+    assert isinstance(declaration, FakeDeclaration), "Invalid declaration type in test"
+    yield declaration.content
+
+
+@pytest.fixture(autouse=True, scope="module")
+def mock_serialize_declaration(module_mocker: pytest_mock.MockerFixture) -> None:
+    for patch_module in (serialize_statement_module, serialize_declaration_module):
+        module_mocker.patch.object(
+            patch_module,
+            "serialize_declaration",
+            wraps=fake_serialize_declaration,
+        )
+
+
 BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (NullStatement(), [[";"]]),
     (ExpressionStatement(FakeExpression("test")), [["test", ";"]]),
@@ -79,6 +104,14 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             ExpressionStatement(FakeExpression("content")),
         ),
         [["do"], ["content", ";"], ["while", "(", "condition", ")", ";"]],
+    ),
+    (
+        ForRangeStatement(
+            FakeDeclaration("value"),
+            FakeExpression("range"),
+            ExpressionStatement(FakeExpression("content")),
+        ),
+        [["for", "(", "value", ":", "range", ")"], ["content", ";"]],
     ),
     (
         ForStatement(
