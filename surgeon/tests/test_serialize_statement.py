@@ -17,6 +17,7 @@ from surgeon.serialize import (
 )
 from surgeon.serialize.serialize_statement import serialize_statement
 from surgeon.statement.compound_statement import CompountStatement
+from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
 from surgeon.statement.iteration_statement.for_range_expression import ForRangeStatement
@@ -84,8 +85,18 @@ def mock_serialize_declaration(module_mocker: pytest_mock.MockerFixture) -> None
 
 
 BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    (NullStatement(), [[";"]]),
-    (ExpressionStatement(FakeExpression("test")), [["test", ";"]]),
+    (
+        NullStatement(),
+        [
+            [";"],
+        ],
+    ),
+    (
+        ExpressionStatement(FakeExpression("test")),
+        [
+            ["test", ";"],
+        ],
+    ),
     (
         CompountStatement(
             [
@@ -93,7 +104,20 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
                 ExpressionStatement(FakeExpression("statement_2")),
             ],
         ),
-        [["{"], ["statement_1", ";"], ["statement_2", ";"], ["}"]],
+        [
+            ["{"],
+            ["statement_1", ";"],
+            ["statement_2", ";"],
+            ["}"],
+        ],
+    ),
+    (
+        DeclarationStatement(
+            FakeDeclaration("declaration"),
+        ),
+        [
+            ["declaration", ";"],
+        ],
     ),
 )
 
@@ -103,7 +127,11 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
         ),
-        [["do"], ["content", ";"], ["while", "(", "condition", ")", ";"]],
+        [
+            ["do"],
+            ["content", ";"],
+            ["while", "(", "condition", ")", ";"],
+        ],
     ),
     (
         ForRangeStatement(
@@ -111,7 +139,10 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             FakeExpression("range"),
             ExpressionStatement(FakeExpression("content")),
         ),
-        [["for", "(", "value", ":", "range", ")"], ["content", ";"]],
+        [
+            ["for", "(", "value", ":", "range", ")"],
+            ["content", ";"],
+        ],
     ),
     (
         ForStatement(
@@ -119,28 +150,69 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             ExpressionStatement(FakeExpression("content")),
             FakeExpression("condition"),
         ),
-        [["for", "(", "initialize", ";", "condition", ";", ")"], ["content", ";"]],
+        [
+            ["for", "(", "initialize", ";", "condition", ";", ")"],
+            ["content", ";"],
+        ],
     ),
     (
         WhileStatement(
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
         ),
-        [["while", "(", "condition", ")"], ["content", ";"]],
+        [
+            ["while", "(", "condition", ")"],
+            ["content", ";"],
+        ],
     ),
 )
 
 JUMP_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    (BreakStatement(), [["break", ";"]]),
-    (ContinueStatement(), [["continue", ";"]]),
-    (GotoStatement("identifier"), [["goto", "identifier", ";"]]),
-    (ReturnStatement(), [["return", ";"]]),
+    (
+        BreakStatement(),
+        [
+            ["break", ";"],
+        ],
+    ),
+    (
+        ContinueStatement(),
+        [
+            ["continue", ";"],
+        ],
+    ),
+    (
+        GotoStatement("identifier"),
+        [
+            ["goto", "identifier", ";"],
+        ],
+    ),
+    (
+        ReturnStatement(),
+        [
+            ["return", ";"],
+        ],
+    ),
 )
 
 LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    (CaseStatement(FakeExpression("value")), [["case", "value", ":"]]),
-    (DefaultStatement(), [["default", ":"]]),
-    (GotoTargetStatement("label"), [["label", ":"]]),
+    (
+        CaseStatement(FakeExpression("value")),
+        [
+            ["case", "value", ":"],
+        ],
+    ),
+    (
+        DefaultStatement(),
+        [
+            ["default", ":"],
+        ],
+    ),
+    (
+        GotoTargetStatement("label"),
+        [
+            ["label", ":"],
+        ],
+    ),
 )
 
 SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
@@ -162,7 +234,10 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
         ),
-        [["if", "constexpr", "(", "condition", ")"], ["content", ";"]],
+        [
+            ["if", "constexpr", "(", "condition", ")"],
+            ["content", ";"],
+        ],
     ),
     (
         IfElseStatement(
@@ -182,7 +257,10 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
         ),
-        [["if", "(", "condition", ")"], ["content", ";"]],
+        [
+            ["if", "(", "condition", ")"],
+            ["content", ";"],
+        ],
     ),
 )
 

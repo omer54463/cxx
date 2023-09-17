@@ -8,6 +8,7 @@ from surgeon.serialize.serialize_expression import (
     serialize_optional_expression,
 )
 from surgeon.statement.compound_statement import CompountStatement
+from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
 from surgeon.statement.iteration_statement.for_range_expression import ForRangeStatement
@@ -58,6 +59,9 @@ def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
             for sub_statement in statement.content:
                 yield from serialize_statement(sub_statement)
             yield ("}",)
+
+        case DeclarationStatement(content):
+            yield chain(serialize_declaration(content), (";",))
 
         case ExpressionStatement(content):
             yield chain(serialize_expression(content), (";",))
