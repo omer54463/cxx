@@ -7,7 +7,7 @@ from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
-from surgeon.statement.iteration_statement.for_range_expression import ForRangeStatement
+from surgeon.statement.iteration_statement.for_range_statement import ForRangeStatement
 from surgeon.statement.iteration_statement.for_statement import ForStatement
 from surgeon.statement.iteration_statement.while_statement import WhileStatement
 from surgeon.statement.jump_statement.break_statement import BreakStatement
