@@ -1,8 +1,16 @@
 from collections.abc import Iterable
+from dataclasses import dataclass
 
 import pytest
+import pytest_mock
 
-from surgeon.expression.raw_expression import RawExpression
+from surgeon.expression.expression import Expression
+from surgeon.serialize import (
+    serialize_expression as serialize_expression_module,
+)
+from surgeon.serialize import (
+    serialize_statement as serialize_statement_module,
+)
 from surgeon.serialize.serialize_statement import serialize_statement
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.expression_statement import ExpressionStatement
@@ -29,14 +37,35 @@ from surgeon.statement.selection_statement.if_else_statement import IfElseStatem
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.statement import Statement
 
+
+@dataclass
+class FakeExpression(Expression):
+    content: str
+
+
+def fake_serialize_expression(expression: Expression) -> Iterable[str]:
+    assert isinstance(expression, FakeExpression), "Invalid expression type in test"
+    yield expression.content
+
+
+@pytest.fixture(autouse=True, scope="module")
+def mock_serialize_expression(module_mocker: pytest_mock.MockerFixture) -> None:
+    for patch_module in (serialize_statement_module, serialize_expression_module):
+        module_mocker.patch.object(
+            patch_module,
+            "serialize_expression",
+            wraps=fake_serialize_expression,
+        )
+
+
 BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (NullStatement(), [[";"]]),
-    (ExpressionStatement(RawExpression("test")), [["test", ";"]]),
+    (ExpressionStatement(FakeExpression("test")), [["test", ";"]]),
     (
         CompountStatement(
             [
-                ExpressionStatement(RawExpression("statement_1")),
-                ExpressionStatement(RawExpression("statement_2")),
+                ExpressionStatement(FakeExpression("statement_1")),
+                ExpressionStatement(FakeExpression("statement_2")),
             ],
         ),
         [["{"], ["statement_1", ";"], ["statement_2", ";"], ["}"]],
@@ -46,23 +75,23 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         DoWhileStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
         ),
         [["do"], ["content", ";"], ["while", "(", "condition", ")", ";"]],
     ),
     (
         ForStatement(
-            ExpressionStatement(RawExpression("initialize")),
-            ExpressionStatement(RawExpression("content")),
-            RawExpression("condition"),
+            ExpressionStatement(FakeExpression("initialize")),
+            ExpressionStatement(FakeExpression("content")),
+            FakeExpression("condition"),
         ),
         [["for", "(", "initialize", ";", "condition", ";", ")"], ["content", ";"]],
     ),
     (
         WhileStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
         ),
         [["while", "(", "condition", ")"], ["content", ";"]],
     ),
@@ -76,7 +105,7 @@ JUMP_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 )
 
 LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    (CaseStatement(RawExpression("value")), [["case", "value", ":"]]),
+    (CaseStatement(FakeExpression("value")), [["case", "value", ":"]]),
     (DefaultStatement(), [["default", ":"]]),
     (GotoTargetStatement("label"), [["label", ":"]]),
 )
@@ -84,9 +113,9 @@ LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         IfConstexprElseStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
-            ExpressionStatement(RawExpression("else_content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
+            ExpressionStatement(FakeExpression("else_content")),
         ),
         [
             ["if", "constexpr", "(", "condition", ")"],
@@ -97,16 +126,16 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         IfConstexprStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
         ),
         [["if", "constexpr", "(", "condition", ")"], ["content", ";"]],
     ),
     (
         IfElseStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
-            ExpressionStatement(RawExpression("else_content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
+            ExpressionStatement(FakeExpression("else_content")),
         ),
         [
             ["if", "(", "condition", ")"],
@@ -117,8 +146,8 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         IfStatement(
-            RawExpression("condition"),
-            ExpressionStatement(RawExpression("content")),
+            FakeExpression("condition"),
+            ExpressionStatement(FakeExpression("content")),
         ),
         [["if", "(", "condition", ")"], ["content", ";"]],
     ),
@@ -133,10 +162,9 @@ STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 )
 
 
-def process_lines(lines: Iterable[Iterable[str]]) -> list[list[str]]:
-    return [list(line) for line in lines]
-
-
 @pytest.mark.parametrize(("statement", "expected"), STATEMENT_TEST_DATA)
 def test_serialize_statement(statement: Statement, expected: list[list[str]]) -> None:
-    assert process_lines(serialize_statement(statement)) == expected
+    statement_lines = serialize_statement(statement)
+    statement_lines_as_lists = [list(line) for line in statement_lines]
+
+    assert statement_lines_as_lists == expected

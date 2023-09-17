@@ -4,10 +4,9 @@ description = "A C/C++ source generation library."
 version = "0.1.0"
 requires-python = ">=3.11.0"
 authors = [{ name = "Omer Lubin", email = "omer.lubin.1337@gmail.com" }]
-dependencies = ["case-converter"]
 
 [project.optional-dependencies]
-dev = ["pre-commit", "black", "ruff", "mypy", "pytest"]
+dev = ["pre-commit", "black", "ruff", "mypy", "pytest", "pytest-mock"]
 
 [tool.mypy]
 strict = true
@@ -16,7 +15,7 @@ exclude = ["build"]
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["D", "EM", "ANN101", "ANN102", "TRY003"]
+ignore = ["ANN101", "ANN102", "D", "EM", "PT004", "TRY003"]
 
 [tool.ruff.per-file-ignores]
 "test_*.py" = ["S101"]

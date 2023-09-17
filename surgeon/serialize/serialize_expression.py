@@ -1,13 +1,10 @@
 from collections.abc import Iterable
 
 from surgeon.expression.expression import Expression
-from surgeon.expression.raw_expression import RawExpression
 
 
-def serialize_expression(expression: Expression) -> Iterable[str]:
-    match expression:
-        case RawExpression(content):
-            yield content
+def serialize_expression(_expression: Expression) -> Iterable[str]:
+    raise NotImplementedError("TODO")
 
 
 def serialize_optional_expression(expression: Expression | None) -> Iterable[str]:
