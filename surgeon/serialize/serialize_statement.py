@@ -22,10 +22,10 @@ from surgeon.statement.jump_statement.jump_statement import JumpStatement
 from surgeon.statement.jump_statement.return_statement import ReturnStatement
 from surgeon.statement.labeled_statement.case_statement import CaseStatement
 from surgeon.statement.labeled_statement.default_statement import DefaultStatement
-from surgeon.statement.labeled_statement.labeled_statement import LabeledStatement
-from surgeon.statement.labeled_statement.llabel_statement import (
+from surgeon.statement.labeled_statement.label_statement import (
     LabelStatement,
 )
+from surgeon.statement.labeled_statement.labeled_statement import LabeledStatement
 from surgeon.statement.null_statement import NullStatement
 from surgeon.statement.selection_statement.if_constexpr_else_statement import (
     IfConstexprElseStatement,

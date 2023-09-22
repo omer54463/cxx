@@ -17,7 +17,7 @@ from surgeon.statement.jump_statement.goto_statement import GotoStatement
 from surgeon.statement.jump_statement.return_statement import ReturnStatement
 from surgeon.statement.labeled_statement.case_statement import CaseStatement
 from surgeon.statement.labeled_statement.default_statement import DefaultStatement
-from surgeon.statement.labeled_statement.llabel_statement import (
+from surgeon.statement.labeled_statement.label_statement import (
     LabelStatement,
 )
 from surgeon.statement.null_statement import NullStatement
