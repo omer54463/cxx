@@ -1,12 +1,15 @@
 from collections.abc import Iterable
 from itertools import chain
 
-from surgeon.serialize.flatten_lines import flatten_lines
+from surgeon.expression.expression import Expression
+from surgeon.initializer.initializer import Initializer
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.serialize.serialize_expression import (
     serialize_expression,
     serialize_optional_expression,
 )
+from surgeon.serialize.serialize_initializer import serialize_initializer
+from surgeon.serialize.utility import flatten_lines
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
@@ -27,12 +30,6 @@ from surgeon.statement.labeled_statement.label_statement import (
 )
 from surgeon.statement.labeled_statement.labeled_statement import LabeledStatement
 from surgeon.statement.null_statement import NullStatement
-from surgeon.statement.selection_statement.if_constexpr_else_statement import (
-    IfConstexprElseStatement,
-)
-from surgeon.statement.selection_statement.if_constexpr_statement import (
-    IfConstexprStatement,
-)
 from surgeon.statement.selection_statement.if_else_statement import IfElseStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.selection_statement.selection_statement import SelectionStatement
@@ -132,8 +129,14 @@ def serialize_jump_statement(
         case GotoStatement(identifier):
             yield ("goto", identifier, ";")
 
-        case ReturnStatement(value):
-            yield chain(("return",), serialize_optional_expression(value), (";",))
+        case ReturnStatement(None):
+            yield ("return", ";")
+
+        case ReturnStatement(Expression() as expression):
+            yield chain(("return",), serialize_expression(expression), (";",))
+
+        case ReturnStatement(Initializer() as initializer):
+            yield chain(("return",), serialize_initializer(initializer), (";",))
 
         case _:
             raise TypeError(f"Unexpected type {type(statement)}")
@@ -160,9 +163,17 @@ def serialize_selection_statement(
     statement: SelectionStatement,
 ) -> Iterable[Iterable[str]]:
     match statement:
-        case IfConstexprElseStatement(condition, content, else_content, initialization):
+        case IfElseStatement(
+            condition,
+            content,
+            else_content,
+            initialization,
+            constexpr,
+        ):
             yield chain(
-                ("if", "constexpr", "("),
+                ("if",),
+                ("constexpr",) if constexpr else (),
+                ("(",),
                 flatten_lines(serialize_optional_statement(initialization)),
                 serialize_expression(condition),
                 (")",),
@@ -171,29 +182,11 @@ def serialize_selection_statement(
             yield ("else",)
             yield from serialize_statement(else_content)
 
-        case IfConstexprStatement(condition, content, initialization):
+        case IfStatement(condition, content, initialization, constexpr):
             yield chain(
-                ("if", "constexpr", "("),
-                flatten_lines(serialize_optional_statement(initialization)),
-                serialize_expression(condition),
-                (")",),
-            )
-            yield from serialize_statement(content)
-
-        case IfElseStatement(condition, content, else_content, initialization):
-            yield chain(
-                ("if", "("),
-                flatten_lines(serialize_optional_statement(initialization)),
-                serialize_expression(condition),
-                (")",),
-            )
-            yield from serialize_statement(content)
-            yield ("else",)
-            yield from serialize_statement(else_content)
-
-        case IfStatement(condition, content, initialization):
-            yield chain(
-                ("if", "("),
+                ("if",),
+                ("constexpr",) if constexpr else (),
+                ("(",),
                 flatten_lines(serialize_optional_statement(initialization)),
                 serialize_expression(condition),
                 (")"),

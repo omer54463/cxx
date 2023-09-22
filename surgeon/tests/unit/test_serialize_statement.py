@@ -21,12 +21,6 @@ from surgeon.statement.labeled_statement.label_statement import (
     LabelStatement,
 )
 from surgeon.statement.null_statement import NullStatement
-from surgeon.statement.selection_statement.if_constexpr_else_statement import (
-    IfConstexprElseStatement,
-)
-from surgeon.statement.selection_statement.if_constexpr_statement import (
-    IfConstexprStatement,
-)
 from surgeon.statement.selection_statement.if_else_statement import IfElseStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.statement import Statement
@@ -166,10 +160,11 @@ LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 
 SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
-        IfConstexprElseStatement(
+        IfElseStatement(
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
             ExpressionStatement(FakeExpression("else_content")),
+            constexpr=True,
         ),
         [
             ["if", "constexpr", "(", "condition", ")"],
@@ -179,9 +174,10 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        IfConstexprStatement(
+        IfStatement(
             FakeExpression("condition"),
             ExpressionStatement(FakeExpression("content")),
+            constexpr=True,
         ),
         [
             ["if", "constexpr", "(", "condition", ")"],

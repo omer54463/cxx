@@ -10,3 +10,4 @@ class IfStatement(SelectionStatement):
     condition: Expression
     content: Statement
     initialization: Statement | None = None
+    constexpr: bool = False
