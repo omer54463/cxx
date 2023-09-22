@@ -6,5 +6,5 @@ from surgeon.declaration.specifier import Specifier
 
 @dataclass
 class EnumDeclaration(Declaration):
-    name: str
+    identifier: str
     specifiers: Specifier = Specifier.NONE

@@ -13,6 +13,12 @@ from surgeon.declaration.alias.using_enum_declaration import UsingEnumDeclaratio
 from surgeon.declaration.alias.using_namespace_declaration import (
     UsingNamespaceDeclaration,
 )
+from surgeon.declaration.clazz.class_declaration import ClassDeclaration
+from surgeon.declaration.clazz.class_definition import ClassDefinition
+from surgeon.declaration.clazz.final_class_definition import FinalClassDefinition
+from surgeon.declaration.clazz.final_struct_definition import FinalStructDefinition
+from surgeon.declaration.clazz.struct_declaration import StructDeclaration
+from surgeon.declaration.clazz.struct_definition import StructDefinition
 from surgeon.declaration.declaration import Declaration
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_declaration import serialize_declaration
@@ -53,9 +59,37 @@ ALIAS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
 )
 
+CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        ClassDeclaration("identifier"),
+        [["class", "identifier", ";"]],
+    ),
+    (
+        ClassDefinition("identifier"),
+        [["class", "identifier"], ["{"], ["}"]],
+    ),
+    (
+        FinalClassDefinition("identifier"),
+        [["class", "identifier", "final"], ["{"], ["}"]],
+    ),
+    (
+        StructDeclaration("identifier"),
+        [["struct", "identifier", ";"]],
+    ),
+    (
+        StructDefinition("identifier"),
+        [["struct", "identifier"], ["{"], ["}"]],
+    ),
+    (
+        FinalStructDefinition("identifier"),
+        [["struct", "identifier", "final"], ["{"], ["}"]],
+    ),
+)
+
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
     BASIC_DECLARATION_TEST_DATA,
     ALIAS_DECLARATION_TEST_DATA,
+    CLASS_DECLARATION_TEST_DATA,
 )
 
 

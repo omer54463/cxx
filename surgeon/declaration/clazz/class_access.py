@@ -1,8 +1,8 @@
-from enum import Flag, auto
+from enum import Enum, auto
 
 
-class ClassAccess(Flag):
-    NONE = 0
+class ClassAccess(Enum):
+    DEFAULT = auto()
     PUBLIC = auto()
     PROTECTED = auto()
     PRIVATE = auto()

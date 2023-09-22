@@ -7,7 +7,7 @@ from surgeon.declaration.specifier import Specifier
 
 
 @dataclass
-class StructDefinition(ClassLikeDeclaration):
+class FinalClassDefinition(ClassLikeDeclaration):
     identifier: str
     declaration_blocks: list[ClassDeclarationBlock] = field(default_factory=list)
     parents: list[ClassParent] = field(default_factory=list)
