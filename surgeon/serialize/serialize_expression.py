@@ -3,8 +3,10 @@ from collections.abc import Iterable
 from surgeon.expression.expression import Expression
 
 
-def serialize_expression(_expression: Expression) -> Iterable[str]:
-    raise NotImplementedError("TODO")
+def serialize_expression(expression: Expression) -> Iterable[str]:
+    match expression:
+        case _:
+            raise TypeError(f"Unexpected type {type(expression)}")
 
 
 def serialize_optional_expression(expression: Expression | None) -> Iterable[str]:

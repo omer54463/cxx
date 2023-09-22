@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from itertools import chain
 
 import pytest
 
@@ -40,9 +41,9 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        ExpressionStatement(FakeExpression("test")),
+        ExpressionStatement(FakeExpression("expression")),
         [
-            ["test", ";"],
+            ["expression", ";"],
         ],
     ),
     (
@@ -212,12 +213,12 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
 )
 
-STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
-    *BASIC_STATEMENT_TEST_DATA,
-    *ITERATION_STATEMENT_TEST_DATA,
-    *JUMP_STATEMENT_TEST_DATA,
-    *LABELED_STATEMENT_TEST_DATA,
-    *SELECTION_STATEMENT_TEST_DATA,
+STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = chain(
+    BASIC_STATEMENT_TEST_DATA,
+    ITERATION_STATEMENT_TEST_DATA,
+    JUMP_STATEMENT_TEST_DATA,
+    LABELED_STATEMENT_TEST_DATA,
+    SELECTION_STATEMENT_TEST_DATA,
 )
 
 

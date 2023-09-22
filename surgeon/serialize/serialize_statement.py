@@ -61,7 +61,7 @@ def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
             yield ("}",)
 
         case DeclarationStatement(content):
-            yield serialize_declaration(content)
+            yield from serialize_declaration(content)
 
         case ExpressionStatement(content):
             yield chain(serialize_expression(content), (";",))
@@ -93,7 +93,7 @@ def serialize_iteration_statement(
             yield chain(
                 ("for", "("),
                 flatten_lines(serialize_optional_statement(initialization)),
-                serialize_declaration(value),
+                flatten_lines(serialize_declaration(value)),
                 (":",),
                 serialize_expression(range),
                 (")"),

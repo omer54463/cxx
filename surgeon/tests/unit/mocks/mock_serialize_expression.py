@@ -1,16 +1,11 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
+from types import ModuleType
 
 import pytest
 import pytest_mock
 
 from surgeon.expression.expression import Expression
-from surgeon.serialize import (
-    serialize_expression as serialize_expression_module,
-)
-from surgeon.serialize import (
-    serialize_statement as serialize_statement_module,
-)
 
 
 @dataclass
@@ -24,10 +19,16 @@ def fake_serialize_expression(expression: Expression) -> Iterable[str]:
 
 
 @pytest.fixture()
-def mock_serialize_expression(module_mocker: pytest_mock.MockerFixture) -> None:
-    for patch_module in (serialize_statement_module, serialize_expression_module):
+def mock_serialize_expression(
+    serialization_modules: Iterable[ModuleType],
+    module_mocker: pytest_mock.MockerFixture,
+) -> None:
+    for module in serialization_modules:
+        if not hasattr(module, "serialize_expression"):
+            continue
+
         module_mocker.patch.object(
-            patch_module,
+            module,
             "serialize_expression",
             wraps=fake_serialize_expression,
         )
