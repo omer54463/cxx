@@ -17,8 +17,8 @@ from surgeon.statement.jump_statement.goto_statement import GotoStatement
 from surgeon.statement.jump_statement.return_statement import ReturnStatement
 from surgeon.statement.labeled_statement.case_statement import CaseStatement
 from surgeon.statement.labeled_statement.default_statement import DefaultStatement
-from surgeon.statement.labeled_statement.goto_target_statement import (
-    GotoTargetStatement,
+from surgeon.statement.labeled_statement.llabel_statement import (
+    LabelStatement,
 )
 from surgeon.statement.null_statement import NullStatement
 from surgeon.statement.selection_statement.if_constexpr_else_statement import (
@@ -157,7 +157,7 @@ LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        GotoTargetStatement("label"),
+        LabelStatement("label"),
         [
             ["label", ":"],
         ],

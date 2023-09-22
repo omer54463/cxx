@@ -4,5 +4,5 @@ from surgeon.statement.labeled_statement.labeled_statement import LabeledStateme
 
 
 @dataclass
-class GotoTargetStatement(LabeledStatement):
+class LabelStatement(LabeledStatement):
     identifier: str
