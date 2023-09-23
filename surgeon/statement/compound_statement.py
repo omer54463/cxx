@@ -1,8 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from surgeon.statement.statement import Statement
 
 
 @dataclass
 class CompountStatement(Statement):
-    content: list[Statement] = field(default_factory=list)
+    content: list[Statement]

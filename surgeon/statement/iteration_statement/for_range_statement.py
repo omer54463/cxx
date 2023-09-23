@@ -11,4 +11,4 @@ class ForRangeStatement(IterationStatement):
     value: Declaration
     range: Expression
     content: Statement
-    initialization: Statement | None = None
+    initializer: Statement | None

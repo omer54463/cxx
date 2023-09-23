@@ -9,4 +9,4 @@ from surgeon.statement.statement import Statement
 class SwitchStatement(SelectionStatement):
     value: Expression
     content: Statement
-    initialization: Statement | None = None
+    initializer: Statement | None

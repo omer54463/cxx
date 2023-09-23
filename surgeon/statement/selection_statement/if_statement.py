@@ -9,5 +9,5 @@ from surgeon.statement.statement import Statement
 class IfStatement(SelectionStatement):
     condition: Expression
     content: Statement
-    initialization: Statement | None = None
-    constexpr: bool = False
+    initializer: Statement | None
+    constexpr: bool

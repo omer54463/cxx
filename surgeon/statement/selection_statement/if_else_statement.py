@@ -10,5 +10,5 @@ class IfElseStatement(SelectionStatement):
     condition: Expression
     content: Statement
     else_content: Statement
-    initialization: Statement | None = None
-    constexpr: bool = False
+    initializer: Statement | None
+    constexpr: bool
