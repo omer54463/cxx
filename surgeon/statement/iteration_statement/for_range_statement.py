@@ -8,7 +8,7 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class ForRangeStatement(IterationStatement):
+    initializer: Statement | None
     value: Declaration
     range: Expression
     content: Statement
-    initializer: Statement | None

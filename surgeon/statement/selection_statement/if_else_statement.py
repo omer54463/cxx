@@ -7,8 +7,8 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class IfElseStatement(SelectionStatement):
+    constexpr: bool
+    initializer: Statement | None
     condition: Expression
     content: Statement
     else_content: Statement
-    initializer: Statement | None
-    constexpr: bool

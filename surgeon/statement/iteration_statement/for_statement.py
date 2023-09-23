@@ -8,6 +8,6 @@ from surgeon.statement.statement import Statement
 @dataclass
 class ForStatement(IterationStatement):
     initializer: Statement
-    content: Statement
     condition: Expression | None
     progression: Expression | None
+    content: Statement

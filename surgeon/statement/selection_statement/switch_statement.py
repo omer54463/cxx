@@ -7,6 +7,6 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class SwitchStatement(SelectionStatement):
+    initializer: Statement | None
     value: Expression
     content: Statement
-    initializer: Statement | None

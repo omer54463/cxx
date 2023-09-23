@@ -7,7 +7,7 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class IfStatement(SelectionStatement):
+    constexpr: bool
+    initializer: Statement | None
     condition: Expression
     content: Statement
-    initializer: Statement | None
-    constexpr: bool
