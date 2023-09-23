@@ -11,3 +11,4 @@ class IfStatement(SelectionStatement):
     initializer: Statement | None
     condition: Expression
     content: Statement
+    else_content: Statement | None

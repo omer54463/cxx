@@ -21,7 +21,6 @@ from surgeon.statement.labeled_statement.label_statement import (
     LabelStatement,
 )
 from surgeon.statement.null_statement import NullStatement
-from surgeon.statement.selection_statement.if_else_statement import IfElseStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.selection_statement.switch_statement import SwitchStatement
 from surgeon.statement.statement import Statement
@@ -242,6 +241,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=FakeExpression("condition"),
             content=ExpressionStatement(FakeExpression("content")),
+            else_content=None,
         ),
         [
             ["if", "constexpr", "(", "initializer", ";", "condition", ")"],
@@ -249,7 +249,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        IfElseStatement(
+        IfStatement(
             constexpr=True,
             initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=FakeExpression("condition"),
@@ -269,6 +269,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=FakeExpression("condition"),
             content=ExpressionStatement(FakeExpression("content")),
+            else_content=None,
         ),
         [
             ["if", "(", "initializer", ";", "condition", ")"],
@@ -276,7 +277,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        IfElseStatement(
+        IfStatement(
             constexpr=False,
             initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=FakeExpression("condition"),
@@ -296,6 +297,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             initializer=None,
             condition=FakeExpression("condition"),
             content=ExpressionStatement(FakeExpression("content")),
+            else_content=None,
         ),
         [
             ["if", "constexpr", "(", "condition", ")"],
@@ -303,7 +305,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        IfElseStatement(
+        IfStatement(
             constexpr=True,
             initializer=None,
             condition=FakeExpression("condition"),
@@ -323,6 +325,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             initializer=None,
             condition=FakeExpression("condition"),
             content=ExpressionStatement(FakeExpression("content")),
+            else_content=None,
         ),
         [
             ["if", "(", "condition", ")"],
@@ -330,7 +333,7 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        IfElseStatement(
+        IfStatement(
             constexpr=False,
             initializer=None,
             condition=FakeExpression("condition"),

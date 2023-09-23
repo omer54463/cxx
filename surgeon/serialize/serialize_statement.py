@@ -30,7 +30,6 @@ from surgeon.statement.labeled_statement.label_statement import (
 )
 from surgeon.statement.labeled_statement.labeled_statement import LabeledStatement
 from surgeon.statement.null_statement import NullStatement
-from surgeon.statement.selection_statement.if_else_statement import IfElseStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.selection_statement.selection_statement import SelectionStatement
 from surgeon.statement.selection_statement.switch_statement import SwitchStatement
@@ -163,7 +162,7 @@ def serialize_selection_statement(
     statement: SelectionStatement,
 ) -> Iterable[Iterable[str]]:
     match statement:
-        case IfElseStatement(
+        case IfStatement(
             constexpr,
             initializer,
             condition,
@@ -179,19 +178,10 @@ def serialize_selection_statement(
                 (")",),
             )
             yield from serialize_statement(content)
-            yield ("else",)
-            yield from serialize_statement(else_content)
 
-        case IfStatement(constexpr, initializer, condition, content):
-            yield chain(
-                ("if",),
-                ("constexpr",) if constexpr else (),
-                ("(",),
-                flatten_lines(serialize_optional_statement(initializer)),
-                serialize_expression(condition),
-                (")"),
-            )
-            yield from serialize_statement(content)
+            if else_content is not None:
+                yield ("else",)
+                yield from serialize_statement(else_content)
 
         case SwitchStatement(initializer, value, content):
             yield chain(
