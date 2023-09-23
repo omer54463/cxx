@@ -8,6 +8,8 @@ from surgeon.declaration.class_declaration.class_definition import ClassDefiniti
 from surgeon.declaration.declaration import Declaration
 from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
 from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
+from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
+from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_expression import serialize_expression
 from surgeon.serialize.serialize_literal import serialize_literal
@@ -20,6 +22,9 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
 
         case EnumDeclaration():
             yield from serialize_enum_declaration(declaration)
+
+        case SimpleDeclaration():
+            yield from serialize_simple_declaration(declaration)
 
         case StaticAssertDeclaration(expression, literal):
             yield chain(
@@ -107,6 +112,23 @@ def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[Iterabl
 
         case _:
             raise TypeError(f"Unexpected type {type(declaration)}")
+
+
+def serialize_simple_declaration(
+    declaration: SimpleDeclaration,
+) -> Iterable[Iterable[str]]:
+    match declaration:
+        case SimpleDefinition(specifiers, type, identifier, initializer):
+            yield chain(
+                specifiers,
+                (type, identifier),
+                ("=",),
+                serialize_expression(initializer),
+                (";",),
+            )
+
+        case SimpleDeclaration(specifiers, type, identifier):
+            yield chain(specifiers, (type, identifier, ";"))
 
 
 def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:

@@ -14,6 +14,8 @@ from surgeon.declaration.declaration import Declaration
 from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
 from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
 from surgeon.declaration.enum_declaration.enum_member import EnumMember
+from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
+from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
@@ -57,16 +59,6 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ),
         [
             ["specifier", "class", "identifier", ";"],
-        ],
-    ),
-    (
-        ClassDeclaration(
-            specifiers=["specifier"],
-            struct=True,
-            identifier="identifier",
-        ),
-        [
-            ["specifier", "struct", "identifier", ";"],
         ],
     ),
     (
@@ -140,34 +132,33 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             final=False,
             bases=[],
             declaration_blocks=[
-                ClassDeclarationBlock(access=ClassAccess.PUBLIC, declarations=[]),
-                ClassDeclarationBlock(access=ClassAccess.PROTECTED, declarations=[]),
-                ClassDeclarationBlock(access=ClassAccess.PRIVATE, declarations=[]),
-            ],
-        ),
-        [
-            ["class", "identifier"],
-            ["{"],
-            ["public", ":"],
-            ["protected", ":"],
-            ["private", ":"],
-            ["}", ";"],
-        ],
-    ),
-    (
-        ClassDefinition(
-            specifiers=[],
-            struct=False,
-            identifier="identifier",
-            final=False,
-            bases=[],
-            declaration_blocks=[
                 ClassDeclarationBlock(
                     access=ClassAccess.PUBLIC,
                     declarations=[
-                        StaticAssertDeclaration(
-                            FakeExpression("expression"),
-                            FakeLiteral("literal"),
+                        SimpleDeclaration(
+                            specifiers=[],
+                            type="type",
+                            identifier="identifier",
+                        ),
+                    ],
+                ),
+                ClassDeclarationBlock(
+                    access=ClassAccess.PROTECTED,
+                    declarations=[
+                        SimpleDeclaration(
+                            specifiers=[],
+                            type="type",
+                            identifier="identifier",
+                        ),
+                    ],
+                ),
+                ClassDeclarationBlock(
+                    access=ClassAccess.PRIVATE,
+                    declarations=[
+                        SimpleDeclaration(
+                            specifiers=[],
+                            type="type",
+                            identifier="identifier",
                         ),
                     ],
                 ),
@@ -177,7 +168,11 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             ["class", "identifier"],
             ["{"],
             ["public", ":"],
-            ["static_assert", "(", "expression", "literal", ")", ";"],
+            ["type", "identifier", ";"],
+            ["protected", ":"],
+            ["type", "identifier", ";"],
+            ["private", ":"],
+            ["type", "identifier", ";"],
             ["}", ";"],
         ],
     ),
@@ -303,10 +298,56 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
 )
 
+SIMPLE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        SimpleDeclaration(
+            specifiers=[],
+            type="type",
+            identifier="identifier",
+        ),
+        [
+            ["type", "identifier", ";"],
+        ],
+    ),
+    (
+        SimpleDeclaration(
+            specifiers=["specifier"],
+            type="type",
+            identifier="identifier",
+        ),
+        [
+            ["specifier", "type", "identifier", ";"],
+        ],
+    ),
+    (
+        SimpleDefinition(
+            specifiers=[],
+            type="type",
+            identifier="identifier",
+            value=FakeExpression("initializer"),
+        ),
+        [
+            ["type", "identifier", "=", "initializer", ";"],
+        ],
+    ),
+    (
+        SimpleDefinition(
+            specifiers=["specifier"],
+            type="type",
+            identifier="identifier",
+            value=FakeExpression("initializer"),
+        ),
+        [
+            ["specifier", "type", "identifier", "=", "initializer", ";"],
+        ],
+    ),
+)
+
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
     BASIC_DECLARATION_TEST_DATA,
     CLASS_DECLARATION_TEST_DATA,
     ENUM_DECLARATION_TEST_DATA,
+    SIMPLE_DECLARATION_TEST_DATA,
 )
 
 

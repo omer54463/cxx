@@ -2,13 +2,11 @@ from collections.abc import Iterable
 from itertools import chain
 
 from surgeon.expression.expression import Expression
-from surgeon.initializer.initializer import Initializer
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.serialize.serialize_expression import (
     serialize_expression,
     serialize_optional_expression,
 )
-from surgeon.serialize.serialize_initializer import serialize_initializer
 from surgeon.serialize.utility import flatten_lines
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.declaration_statement import DeclarationStatement
@@ -133,9 +131,6 @@ def serialize_jump_statement(
 
         case ReturnStatement(Expression() as expression):
             yield chain(("return",), serialize_expression(expression), (";",))
-
-        case ReturnStatement(Initializer() as initializer):
-            yield chain(("return",), serialize_initializer(initializer), (";",))
 
         case _:
             raise TypeError(f"Unexpected type {type(statement)}")
