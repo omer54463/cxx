@@ -1,10 +1,10 @@
 # Surgeon
 
-A C/C++ source generation library.
+A C/C++ source generation package.
 
 ## Current Unsupported Features
 
-This is a list of language features this library doesn't currently support.
+This is a list of language features this package doesn't currently support.
 This is not due to any inherent difficulty - other things were prioritized.
 
 - Structured binding - `auto [a, b] = ...;`
