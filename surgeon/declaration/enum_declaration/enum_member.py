@@ -6,4 +6,4 @@ from surgeon.expression.expression import Expression
 @dataclass
 class EnumMember:
     identifier: str
-    value: Expression
+    value: Expression | None

@@ -3,25 +3,17 @@ from itertools import chain
 
 import pytest
 
-from surgeon.declaration.alias.alias_declaration import AliasDeclaration
-from surgeon.declaration.alias.namespace_alias_declaration import (
-    NamespaceAliasDeclaration,
+from surgeon.declaration.class_declaration.class_access import ClassAccess
+from surgeon.declaration.class_declaration.class_base import ClassBase
+from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
+from surgeon.declaration.class_declaration.class_declaration_block import (
+    ClassDeclarationBlock,
 )
-from surgeon.declaration.alias.type_def_declaration import TypeDefDeclaration
-from surgeon.declaration.alias.using_declaration import UsingDeclaration
-from surgeon.declaration.alias.using_enum_declaration import UsingEnumDeclaration
-from surgeon.declaration.alias.using_namespace_declaration import (
-    UsingNamespaceDeclaration,
-)
-from surgeon.declaration.clazz.class_declaration import ClassDeclaration
-from surgeon.declaration.clazz.class_definition import ClassDefinition
-from surgeon.declaration.clazz.struct_declaration import StructDeclaration
-from surgeon.declaration.clazz.struct_definition import StructDefinition
+from surgeon.declaration.class_declaration.class_definition import ClassDefinition
 from surgeon.declaration.declaration import Declaration
-from surgeon.declaration.enum.enum_declaration import EnumDeclaration
-from surgeon.declaration.enum.enum_definition import EnumDefinition
-from surgeon.declaration.enum.scoped_enum_declaration import ScopedEnumDeclaration
-from surgeon.declaration.enum.scoped_enum_definition import ScopedEnumDefinition
+from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
+from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
+from surgeon.declaration.enum_declaration.enum_member import EnumMember
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
@@ -36,101 +28,199 @@ BASIC_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
 )
 
-ALIAS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
-    (
-        AliasDeclaration("new_type", "old_type"),
-        [
-            ["using", "new_type", "=", "old_type", ";"],
-        ],
-    ),
-    (
-        NamespaceAliasDeclaration("new_identifier", "old_identifier"),
-        [
-            ["namespace", "new_identifier", "=", "old_identifier", ";"],
-        ],
-    ),
-    (
-        UsingDeclaration("identifier"),
-        [
-            ["using", "identifier", ";"],
-        ],
-    ),
-    (
-        UsingEnumDeclaration("identifier"),
-        [
-            ["using", "enum", "identifier", ";"],
-        ],
-    ),
-    (
-        UsingNamespaceDeclaration("identifier"),
-        [
-            ["using", "namespace", "identifier", ";"],
-        ],
-    ),
-    (
-        TypeDefDeclaration("new_type", "old_type"),
-        [
-            ["typedef", "old_type", "new_type", ";"],
-        ],
-    ),
-)
-
 CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
-        ClassDeclaration("identifier"),
+        ClassDeclaration(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+        ),
         [
             ["class", "identifier", ";"],
         ],
     ),
     (
-        ClassDefinition("identifier"),
-        [
-            ["class", "identifier"],
-            ["{"],
-            ["}"],
-        ],
-    ),
-    (
-        ClassDefinition("identifier", final=True),
-        [
-            ["class", "identifier", "final"],
-            ["{"],
-            ["}"],
-        ],
-    ),
-    (
-        StructDeclaration("identifier"),
+        ClassDeclaration(
+            specifiers=[],
+            struct=True,
+            identifier="identifier",
+        ),
         [
             ["struct", "identifier", ";"],
         ],
     ),
     (
-        StructDefinition("identifier"),
+        ClassDeclaration(
+            specifiers=["specifier"],
+            struct=False,
+            identifier="identifier",
+        ),
         [
-            ["struct", "identifier"],
-            ["{"],
-            ["}"],
+            ["specifier", "class", "identifier", ";"],
         ],
     ),
     (
-        StructDefinition("identifier", final=True),
+        ClassDeclaration(
+            specifiers=["specifier"],
+            struct=True,
+            identifier="identifier",
+        ),
         [
-            ["struct", "identifier", "final"],
+            ["specifier", "struct", "identifier", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=False,
+            bases=[],
+            declaration_blocks=[],
+        ),
+        [
+            ["class", "identifier"],
             ["{"],
-            ["}"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=False,
+            bases=[ClassBase(virtual=False, access=None, identifier="base")],
+            declaration_blocks=[],
+        ),
+        [
+            ["class", "identifier", ":", "base"],
+            ["{"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=True,
+            bases=[ClassBase(virtual=False, access=None, identifier="base")],
+            declaration_blocks=[],
+        ),
+        [
+            ["class", "identifier", "final", ":", "base"],
+            ["{"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=False,
+            bases=[
+                ClassBase(virtual=False, access=None, identifier="base_1"),
+                ClassBase(virtual=True, access=ClassAccess.PUBLIC, identifier="base_2"),
+            ],
+            declaration_blocks=[],
+        ),
+        [
+            ["class", "identifier", ":", "base_1", "virtual", "public", "base_2"],
+            ["{"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=False,
+            bases=[],
+            declaration_blocks=[
+                ClassDeclarationBlock(access=ClassAccess.PUBLIC, declarations=[]),
+                ClassDeclarationBlock(access=ClassAccess.PROTECTED, declarations=[]),
+                ClassDeclarationBlock(access=ClassAccess.PRIVATE, declarations=[]),
+            ],
+        ),
+        [
+            ["class", "identifier"],
+            ["{"],
+            ["public", ":"],
+            ["protected", ":"],
+            ["private", ":"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        ClassDefinition(
+            specifiers=[],
+            struct=False,
+            identifier="identifier",
+            final=False,
+            bases=[],
+            declaration_blocks=[
+                ClassDeclarationBlock(
+                    access=ClassAccess.PUBLIC,
+                    declarations=[
+                        StaticAssertDeclaration(
+                            FakeExpression("expression"),
+                            FakeLiteral("literal"),
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        [
+            ["class", "identifier"],
+            ["{"],
+            ["public", ":"],
+            ["static_assert", "(", "expression", "literal", ")", ";"],
+            ["}", ";"],
         ],
     ),
 )
 
 ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
-        EnumDeclaration("identifier"),
+        EnumDeclaration(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+        ),
         [
             ["enum", "identifier", ";"],
         ],
     ),
     (
-        EnumDefinition("identifier"),
+        EnumDeclaration(
+            specifiers=["specifier"],
+            scoped=False,
+            identifier="identifier",
+        ),
+        [
+            ["specifier", "enum", "identifier", ";"],
+        ],
+    ),
+    (
+        EnumDeclaration(
+            specifiers=["specifier"],
+            scoped=True,
+            identifier="identifier",
+        ),
+        [
+            ["specifier", "enum", "class", "identifier", ";"],
+        ],
+    ),
+    (
+        EnumDefinition(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            members=[],
+        ),
         [
             ["enum", "identifier"],
             ["{"],
@@ -138,16 +228,76 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        ScopedEnumDeclaration("identifier", "underlying_type"),
+        EnumDefinition(
+            specifiers=["specifier"],
+            scoped=False,
+            identifier="identifier",
+            members=[],
+        ),
         [
-            ["enum", "class", "identifier", ":", "underlying_type", ";"],
+            ["specifier", "enum", "identifier"],
+            ["{"],
+            ["}"],
         ],
     ),
     (
-        ScopedEnumDefinition("identifier", "underlying_type"),
+        EnumDefinition(
+            specifiers=["specifier"],
+            scoped=True,
+            identifier="identifier",
+            members=[],
+        ),
         [
-            ["enum", "class", "identifier", ":", "underlying_type"],
+            ["specifier", "enum", "class", "identifier"],
             ["{"],
+            ["}"],
+        ],
+    ),
+    (
+        EnumDefinition(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            members=[EnumMember(identifier="member", value=None)],
+        ),
+        [
+            ["enum", "identifier"],
+            ["{"],
+            ["member", ","],
+            ["}"],
+        ],
+    ),
+    (
+        EnumDefinition(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            members=[
+                EnumMember(identifier="member_1", value=None),
+                EnumMember(identifier="member_2", value=None),
+            ],
+        ),
+        [
+            ["enum", "identifier"],
+            ["{"],
+            ["member_1", ","],
+            ["member_2", ","],
+            ["}"],
+        ],
+    ),
+    (
+        EnumDefinition(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            members=[
+                EnumMember(identifier="member", value=FakeExpression("expression")),
+            ],
+        ),
+        [
+            ["enum", "identifier"],
+            ["{"],
+            ["member", "=", "expression", ","],
             ["}"],
         ],
     ),
@@ -155,7 +305,6 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
 
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
     BASIC_DECLARATION_TEST_DATA,
-    ALIAS_DECLARATION_TEST_DATA,
     CLASS_DECLARATION_TEST_DATA,
     ENUM_DECLARATION_TEST_DATA,
 )
