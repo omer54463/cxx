@@ -55,9 +55,7 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        DeclarationStatement(
-            FakeDeclaration("declaration"),
-        ),
+        DeclarationStatement(FakeDeclaration("declaration")),
         [
             ["declaration"],
         ],
