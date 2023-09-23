@@ -24,6 +24,12 @@ from surgeon.declaration.function_declaration.function_declaration import (
 from surgeon.declaration.function_declaration.function_definition import (
     FunctionDefinition,
 )
+from surgeon.declaration.namespace_declaration.namespace_declaration import (
+    NamespaceDeclaration,
+)
+from surgeon.declaration.namespace_declaration.namespace_definition import (
+    NamespaceDefinition,
+)
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
 from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
@@ -547,11 +553,72 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
     ),
 )
 
+NAMESPACE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        NamespaceDeclaration(
+            specificers=[],
+            identifier="identifier",
+        ),
+        [
+            ["namespace", "identifier", ";"],
+        ],
+    ),
+    (
+        NamespaceDeclaration(
+            specificers=["specifier"],
+            identifier="identifier",
+        ),
+        [
+            ["specifier", "namespace", "identifier", ";"],
+        ],
+    ),
+    (
+        NamespaceDefinition(
+            specificers=[],
+            identifier="identifier",
+            declarations=[],
+        ),
+        [
+            ["namespace", "identifier"],
+            ["{"],
+            ["}"],
+        ],
+    ),
+    (
+        NamespaceDefinition(
+            specificers=["specifier"],
+            identifier="identifier",
+            declarations=[],
+        ),
+        [
+            ["specifier", "namespace", "identifier"],
+            ["{"],
+            ["}"],
+        ],
+    ),
+    (
+        NamespaceDefinition(
+            specificers=[],
+            identifier="identifier",
+            declarations=[
+                SimpleDeclaration(specifiers=[], type="type", identifier="identifier"),
+            ],
+        ),
+        [
+            ["namespace", "identifier"],
+            ["{"],
+            ["type", "identifier", ";"],
+            ["}"],
+        ],
+    ),
+)
+
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
     BASIC_DECLARATION_TEST_DATA,
     CLASS_DECLARATION_TEST_DATA,
     ENUM_DECLARATION_TEST_DATA,
     FUNCTION_DECLARATION_TEST_DATA,
+    NAMESPACE_DECLARATION_TEST_DATA,
     SIMPLE_DECLARATION_TEST_DATA,
 )
 

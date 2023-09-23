@@ -18,6 +18,12 @@ from surgeon.declaration.function_declaration.function_declaration import (
 from surgeon.declaration.function_declaration.function_definition import (
     FunctionDefinition,
 )
+from surgeon.declaration.namespace_declaration.namespace_declaration import (
+    NamespaceDeclaration,
+)
+from surgeon.declaration.namespace_declaration.namespace_definition import (
+    NamespaceDefinition,
+)
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
 from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
@@ -38,6 +44,9 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
 
         case SimpleDeclaration():
             yield from serialize_simple_declaration(declaration)
+
+        case NamespaceDeclaration():
+            yield from serialize_namespace_declaration(declaration)
 
         case StaticAssertDeclaration(expression, message):
             yield chain(
@@ -162,6 +171,9 @@ def serialize_function_declaration(
                 ";",
             )
 
+        case _:
+            raise TypeError(f"Unexpected type {type(declaration)}")
+
 
 def serialize_simple_declaration(
     declaration: SimpleDeclaration,
@@ -169,17 +181,38 @@ def serialize_simple_declaration(
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match declaration:
-        case SimpleDefinition(specifiers, type, identifier, initializer):
+        case SimpleDefinition(specifiers, type_, identifier, initializer):
             yield chain(
                 specifiers,
-                (type, identifier),
+                (type_, identifier),
                 ("=",),
                 serialize_expression(initializer),
                 (";",),
             )
 
-        case SimpleDeclaration(specifiers, type, identifier):
-            yield chain(specifiers, (type, identifier, ";"))
+        case SimpleDeclaration(specifiers, type_, identifier):
+            yield chain(specifiers, (type_, identifier, ";"))
+
+        case _:
+            raise TypeError(f"Unexpected type {type(declaration)}")
+
+
+def serialize_namespace_declaration(
+    declaration: NamespaceDeclaration,
+) -> Iterable[Iterable[str]]:
+    match declaration:
+        case NamespaceDefinition(specificers, identifier, declarations):
+            yield chain(specificers, ("namespace", identifier))
+            yield ("{",)
+            for inner_declaration in declarations:
+                yield from serialize_declaration(inner_declaration)
+            yield ("}",)
+
+        case NamespaceDeclaration(specificers, identifier):
+            yield chain(specificers, ("namespace", identifier, ";"))
+
+        case _:
+            raise TypeError(f"Unexpected type {type(declaration)}")
 
 
 def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
