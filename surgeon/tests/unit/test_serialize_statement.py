@@ -37,22 +37,37 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
         ],
     ),
     (
-        ExpressionStatement(FakeExpression("expression")),
+        ExpressionStatement(FakeExpression("content")),
         [
-            ["expression", ";"],
+            ["content", ";"],
+        ],
+    ),
+    (
+        CompountStatement([]),
+        [
+            ["{"],
+            ["}"],
+        ],
+    ),
+    (
+        CompountStatement([ExpressionStatement(FakeExpression("content"))]),
+        [
+            ["{"],
+            ["content", ";"],
+            ["}"],
         ],
     ),
     (
         CompountStatement(
             [
-                ExpressionStatement(FakeExpression("statement_1")),
-                ExpressionStatement(FakeExpression("statement_2")),
+                ExpressionStatement(FakeExpression("content_1")),
+                ExpressionStatement(FakeExpression("content_2")),
             ],
         ),
         [
             ["{"],
-            ["statement_1", ";"],
-            ["statement_2", ";"],
+            ["content_1", ";"],
+            ["content_2", ";"],
             ["}"],
         ],
     ),
@@ -67,8 +82,8 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         DoWhileStatement(
-            FakeExpression("condition"),
-            ExpressionStatement(FakeExpression("content")),
+            condition=FakeExpression("condition"),
+            content=ExpressionStatement(FakeExpression("content")),
         ),
         [
             ["do"],
@@ -78,10 +93,10 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         ForRangeStatement(
-            ExpressionStatement(FakeExpression("initializer")),
-            FakeDeclaration("value"),
-            FakeExpression("range"),
-            ExpressionStatement(FakeExpression("content")),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
+            value=FakeDeclaration("value"),
+            range=FakeExpression("range"),
+            content=ExpressionStatement(FakeExpression("content")),
         ),
         [
             ["for", "(", "initializer", ";", "value", ":", "range", ")"],
@@ -102,10 +117,10 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         ForStatement(
-            ExpressionStatement(FakeExpression("initializer")),
-            FakeExpression("condition"),
-            FakeExpression("progression"),
-            ExpressionStatement(FakeExpression("content")),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
+            condition=FakeExpression("condition"),
+            progression=FakeExpression("progression"),
+            content=ExpressionStatement(FakeExpression("content")),
         ),
         [
             ["for", "(", "initializer", ";", "condition", ";", "progression", ")"],
@@ -114,7 +129,7 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         ForStatement(
-            ExpressionStatement(FakeExpression("initializer")),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=None,
             progression=FakeExpression("progression"),
             content=ExpressionStatement(FakeExpression("content")),
@@ -126,8 +141,8 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         ForStatement(
-            ExpressionStatement(FakeExpression("initializer")),
-            FakeExpression("condition"),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
+            condition=FakeExpression("condition"),
             progression=None,
             content=ExpressionStatement(FakeExpression("content")),
         ),
@@ -138,7 +153,7 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         ForStatement(
-            ExpressionStatement(FakeExpression("initializer")),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
             condition=None,
             progression=None,
             content=ExpressionStatement(FakeExpression("content")),
@@ -150,8 +165,8 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         WhileStatement(
-            FakeExpression("condition"),
-            ExpressionStatement(FakeExpression("content")),
+            condition=FakeExpression("condition"),
+            content=ExpressionStatement(FakeExpression("content")),
         ),
         [
             ["while", "(", "condition", ")"],
@@ -331,9 +346,9 @@ SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
     (
         SwitchStatement(
-            ExpressionStatement(FakeExpression("initializer")),
-            FakeExpression("value"),
-            ExpressionStatement(FakeExpression("content")),
+            initializer=ExpressionStatement(FakeExpression("initializer")),
+            value=FakeExpression("value"),
+            content=ExpressionStatement(FakeExpression("content")),
         ),
         [
             ["switch", "(", "initializer", ";", "value", ")"],
