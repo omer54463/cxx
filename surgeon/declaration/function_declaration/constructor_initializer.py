@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
-from surgeon.declaration.declaration import Declaration
 from surgeon.expression.expression import Expression
 
 
 @dataclass
-class StaticAssertDeclaration(Declaration):
+class ConstructorInitializer:
+    identifier: str
     expression: Expression
-    message: Expression

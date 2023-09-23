@@ -2,11 +2,6 @@ from collections.abc import Iterable
 from itertools import chain
 
 from surgeon.expression.expression import Expression
-from surgeon.serialize.serialize_declaration import serialize_declaration
-from surgeon.serialize.serialize_expression import (
-    serialize_expression,
-    serialize_optional_expression,
-)
 from surgeon.serialize.utility import flatten_lines
 from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.declaration_statement import DeclarationStatement
@@ -35,6 +30,9 @@ from surgeon.statement.statement import Statement
 
 
 def serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_declaration import serialize_declaration
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match statement:
         case IterationStatement():
             yield from serialize_iteration_statement(statement)
@@ -77,6 +75,12 @@ def serialize_optional_statement(
 def serialize_iteration_statement(
     statement: IterationStatement,
 ) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_declaration import serialize_declaration
+    from surgeon.serialize.serialize_expression import (
+        serialize_expression,
+        serialize_optional_expression,
+    )
+
     match statement:
         case DoWhileStatement(content, condition):
             yield ("do",)
@@ -116,6 +120,8 @@ def serialize_iteration_statement(
 def serialize_jump_statement(
     statement: JumpStatement,
 ) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match statement:
         case BreakStatement():
             yield ("break", ";")
@@ -139,6 +145,8 @@ def serialize_jump_statement(
 def serialize_labeled_statement(
     statement: LabeledStatement,
 ) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match statement:
         case CaseStatement(value):
             yield chain(("case",), serialize_expression(value), (":",))
@@ -156,6 +164,8 @@ def serialize_labeled_statement(
 def serialize_selection_statement(
     statement: SelectionStatement,
 ) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match statement:
         case IfStatement(
             constexpr,

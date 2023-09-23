@@ -293,10 +293,7 @@ STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = chain(
 )
 
 
-@pytest.mark.usefixtures(
-    "mock_serialize_expression",
-    "mock_serialize_declaration",
-)
+@pytest.mark.usefixtures("mock_serialize_expression", "mock_serialize_declaration")
 @pytest.mark.parametrize(("statement", "expected"), STATEMENT_TEST_DATA)
 def test_serialize_statement(statement: Statement, expected: list[list[str]]) -> None:
     statement_lines = serialize_statement(statement)

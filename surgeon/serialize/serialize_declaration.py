@@ -8,14 +8,24 @@ from surgeon.declaration.class_declaration.class_definition import ClassDefiniti
 from surgeon.declaration.declaration import Declaration
 from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
 from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
+from surgeon.declaration.function_declaration.constructor_initializer import (
+    ConstructorInitializer,
+)
+from surgeon.declaration.function_declaration.function_argument import FunctionArgument
+from surgeon.declaration.function_declaration.function_declaration import (
+    FunctionDeclaration,
+)
+from surgeon.declaration.function_declaration.function_definition import (
+    FunctionDefinition,
+)
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
 from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
-from surgeon.serialize.serialize_expression import serialize_expression
-from surgeon.serialize.serialize_literal import serialize_literal
 
 
 def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match declaration:
         case ClassDeclaration():
             yield from serialize_class_declaration(declaration)
@@ -23,14 +33,17 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
         case EnumDeclaration():
             yield from serialize_enum_declaration(declaration)
 
+        case FunctionDeclaration():
+            yield from serialize_function_declaration(declaration)
+
         case SimpleDeclaration():
             yield from serialize_simple_declaration(declaration)
 
-        case StaticAssertDeclaration(expression, literal):
+        case StaticAssertDeclaration(expression, message):
             yield chain(
                 ("static_assert", "("),
                 serialize_expression(expression),
-                serialize_literal(literal),
+                serialize_expression(message),
                 (")", ";"),
             )
 
@@ -82,6 +95,8 @@ def serialize_class_declaration(
 
 
 def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match declaration:
         case EnumDefinition(specifiers, scoped, identifier, members):
             yield chain(
@@ -114,9 +129,45 @@ def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[Iterabl
             raise TypeError(f"Unexpected type {type(declaration)}")
 
 
+def serialize_function_declaration(
+    declaration: FunctionDeclaration,
+) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_statement import serialize_statement
+
+    match declaration:
+        case FunctionDefinition(
+            specifiers,
+            return_type,
+            identifier,
+            arguments,
+            initializers,
+            statements,
+        ):
+            yield chain(
+                specifiers,
+                (return_type, identifier),
+                serialize_function_arguments(arguments),
+                serialize_constructor_initializers(initializers),
+            )
+            yield ("{",)
+            for statement in statements:
+                yield from serialize_statement(statement)
+            yield ("}",)
+
+        case FunctionDeclaration(specifiers, return_type, identifier, arguments):
+            yield chain(
+                specifiers,
+                (return_type, identifier),
+                serialize_function_arguments(arguments),
+                ";",
+            )
+
+
 def serialize_simple_declaration(
     declaration: SimpleDeclaration,
 ) -> Iterable[Iterable[str]]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
     match declaration:
         case SimpleDefinition(specifiers, type, identifier, initializer):
             yield chain(
@@ -157,3 +208,37 @@ def serialize_class_access(access: ClassAccess) -> str:
 
         case _:
             raise TypeError(f"Unexpected type {type(access)}")
+
+
+def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterable[str]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
+    yield "("
+    for index, argument in enumerate(arguments):
+        yield argument.type
+        if argument.identifier is not None:
+            yield argument.identifier
+        if argument.default is not None:
+            yield "="
+            yield from serialize_expression(argument.default)
+        if index < len(arguments) - 1:
+            yield ","
+    yield ")"
+
+
+def serialize_constructor_initializers(
+    initializers: list[ConstructorInitializer],
+) -> Iterable[str]:
+    from surgeon.serialize.serialize_expression import serialize_expression
+
+    if len(initializers) == 0:
+        return
+
+    yield ":"
+    for index, initializer in enumerate(initializers):
+        yield initializer.identifier
+        yield "("
+        yield from serialize_expression(initializer.expression)
+        yield ")"
+        if index < len(initializers) - 1:
+            yield ","
