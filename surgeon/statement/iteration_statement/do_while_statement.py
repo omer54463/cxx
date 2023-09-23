@@ -7,5 +7,5 @@ from surgeon.statement.statement import Statement
 
 @dataclass
 class DoWhileStatement(IterationStatement):
-    condition: Expression
     content: Statement
+    condition: Expression

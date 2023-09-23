@@ -81,7 +81,7 @@ def serialize_iteration_statement(
     statement: IterationStatement,
 ) -> Iterable[Iterable[str]]:
     match statement:
-        case DoWhileStatement(condition, content):
+        case DoWhileStatement(content, condition):
             yield ("do",)
             yield from serialize_statement(content)
             yield chain(("while", "("), serialize_expression(condition), (")", ";"))
