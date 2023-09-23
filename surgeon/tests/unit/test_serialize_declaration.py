@@ -20,6 +20,10 @@ from surgeon.declaration.clazz.final_struct_definition import FinalStructDefinit
 from surgeon.declaration.clazz.struct_declaration import StructDeclaration
 from surgeon.declaration.clazz.struct_definition import StructDefinition
 from surgeon.declaration.declaration import Declaration
+from surgeon.declaration.enum.enum_declaration import EnumDeclaration
+from surgeon.declaration.enum.enum_definition import EnumDefinition
+from surgeon.declaration.enum.scoped_enum_declaration import ScopedEnumDeclaration
+from surgeon.declaration.enum.scoped_enum_definition import ScopedEnumDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
@@ -86,10 +90,30 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
 )
 
+ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        EnumDeclaration("identifier"),
+        [["enum", "identifier", ";"]],
+    ),
+    (
+        EnumDefinition("identifier"),
+        [["enum", "identifier"], ["{"], ["}"]],
+    ),
+    (
+        ScopedEnumDeclaration("identifier", "underlying_type"),
+        [["enum", "class", "identifier", ":", "underlying_type", ";"]],
+    ),
+    (
+        ScopedEnumDefinition("identifier", "underlying_type"),
+        [["enum", "class", "identifier", ":", "underlying_type"], ["{"], ["}"]],
+    ),
+)
+
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
     BASIC_DECLARATION_TEST_DATA,
     ALIAS_DECLARATION_TEST_DATA,
     CLASS_DECLARATION_TEST_DATA,
+    ENUM_DECLARATION_TEST_DATA,
 )
 
 

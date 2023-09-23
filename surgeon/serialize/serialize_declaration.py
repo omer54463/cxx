@@ -22,6 +22,11 @@ from surgeon.declaration.clazz.final_struct_definition import FinalStructDefinit
 from surgeon.declaration.clazz.struct_declaration import StructDeclaration
 from surgeon.declaration.clazz.struct_definition import StructDefinition
 from surgeon.declaration.declaration import Declaration
+from surgeon.declaration.enum.enum_declaration import EnumDeclaration
+from surgeon.declaration.enum.enum_definition import EnumDefinition
+from surgeon.declaration.enum.enum_like_declaration import EnumLikeDeclaration
+from surgeon.declaration.enum.scoped_enum_declaration import ScopedEnumDeclaration
+from surgeon.declaration.enum.scoped_enum_definition import ScopedEnumDefinition
 from surgeon.declaration.specifier import Specifier
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
 from surgeon.serialize.serialize_expression import serialize_expression
@@ -35,6 +40,9 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
 
         case ClassLikeDeclaration():
             yield from serialize_class_like_declaration(declaration)
+
+        case EnumLikeDeclaration():
+            yield from serialize_enum_like_declaration(declaration)
 
         case StaticAssertDeclaration(expression, literal):
             yield chain(
@@ -85,13 +93,26 @@ def serialize_class_like_declaration(
     declaration: ClassLikeDeclaration,
 ) -> Iterable[Iterable[str]]:
     match declaration:
-        case ClassDeclaration(name, specifiers):
-            yield chain(serialize_specifiers(specifiers), ("class", name, ";"))
+        case ClassDeclaration(identifier, specifiers):
+            yield chain(serialize_specifiers(specifiers), ("class", identifier, ";"))
 
-        case ClassDefinition(name, declaration_blocks, parents, specifiers):
+        case ClassDefinition(identifier, declaration_blocks, parents, specifiers):
             yield chain(
                 serialize_specifiers(specifiers),
-                ("class", name),
+                ("class", identifier),
+                serialize_class_parents(parents),
+            )
+            yield ("{",)
+            for declaration_block in declaration_blocks:
+                yield (serialize_class_access(declaration_block.access), ":")
+                for inner_declaration in declaration_block.declarations:
+                    yield from serialize_declaration(inner_declaration)
+            yield ("}",)
+
+        case FinalClassDefinition(identifier, declaration_blocks, parents, specifiers):
+            yield chain(
+                serialize_specifiers(specifiers),
+                ("class", identifier, "final"),
                 serialize_class_parents(parents),
             )
             yield ("{",)
@@ -101,10 +122,13 @@ def serialize_class_like_declaration(
                     yield from serialize_declaration(inner_declaration)
             yield ("}",)
 
-        case FinalClassDefinition(name, declaration_blocks, parents, specifiers):
+        case StructDeclaration(identifier, specifiers):
+            yield chain(serialize_specifiers(specifiers), ("struct", identifier, ";"))
+
+        case StructDefinition(identifier, declaration_blocks, parents, specifiers):
             yield chain(
                 serialize_specifiers(specifiers),
-                ("class", name, "final"),
+                ("struct", identifier),
                 serialize_class_parents(parents),
             )
             yield ("{",)
@@ -114,26 +138,10 @@ def serialize_class_like_declaration(
                     yield from serialize_declaration(inner_declaration)
             yield ("}",)
 
-        case StructDeclaration(name, specifiers):
-            yield chain(serialize_specifiers(specifiers), ("struct", name, ";"))
-
-        case StructDefinition(name, declaration_blocks, parents, specifiers):
+        case FinalStructDefinition(identifier, declaration_blocks, parents, specifiers):
             yield chain(
                 serialize_specifiers(specifiers),
-                ("struct", name),
-                serialize_class_parents(parents),
-            )
-            yield ("{",)
-            for declaration_block in declaration_blocks:
-                yield (f"{serialize_class_access(declaration_block.access)}:",)
-                for inner_declaration in declaration_block.declarations:
-                    yield from serialize_declaration(inner_declaration)
-            yield ("}",)
-
-        case FinalStructDefinition(name, declaration_blocks, parents, specifiers):
-            yield chain(
-                serialize_specifiers(specifiers),
-                ("struct", name, "final"),
+                ("struct", identifier, "final"),
                 serialize_class_parents(parents),
             )
             yield ("{",)
@@ -157,6 +165,46 @@ def serialize_class_parents(parents: list[ClassParent]) -> Iterable[str]:
             yield "virtual"
         yield serialize_class_access(parent.access)
         yield parent.identifier
+
+
+def serialize_enum_like_declaration(
+    declaration: EnumLikeDeclaration,
+) -> Iterable[Iterable[str]]:
+    match declaration:
+        case EnumDeclaration(identifier, specifiers):
+            yield chain(serialize_specifiers(specifiers), ("enum", identifier, ";"))
+
+        case EnumDefinition(identifier, members, specifiers):
+            yield chain(serialize_specifiers(specifiers), ("enum", identifier))
+            yield ("{",)
+            for member in members:
+                yield chain(
+                    (member.identifier, "="),
+                    serialize_expression(member.value),
+                )
+            yield ("}",)
+
+        case ScopedEnumDeclaration(identifier, underlying_type, specifiers):
+            yield chain(
+                serialize_specifiers(specifiers),
+                ("enum", "class", identifier),
+                (":", underlying_type) if underlying_type is not None else (),
+                (";",),
+            )
+
+        case ScopedEnumDefinition(identifier, underlying_type, members, specifiers):
+            yield chain(
+                serialize_specifiers(specifiers),
+                ("enum", "class", identifier),
+                (":", underlying_type) if underlying_type is not None else (),
+            )
+            yield ("{",)
+            for member in members:
+                yield chain(
+                    (member.identifier, "="),
+                    serialize_expression(member.value),
+                )
+            yield ("}",)
 
 
 def serialize_specifiers(specifiers: Specifier) -> Iterable[str]:
