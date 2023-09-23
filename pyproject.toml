@@ -1,6 +1,6 @@
 [project]
 name = "surgeon"
-description = "A C/C++ source generation library."
+description = "A C/C++ source generation package."
 version = "0.1.0"
 requires-python = ">=3.11.0"
 authors = [{ name = "Omer Lubin", email = "omer.lubin.1337@gmail.com" }]
