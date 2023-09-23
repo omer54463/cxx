@@ -1,6 +1,8 @@
 from collections.abc import Iterable
 from itertools import chain
 
+from surgeon.declaration.alias_declaration.alias_declaration import AliasDeclaration
+from surgeon.declaration.alias_declaration.alias_mode import AliasMode
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -27,6 +29,8 @@ from surgeon.declaration.namespace_declaration.namespace_definition import (
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
 from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
+from surgeon.declaration.using_declaration.using_declaration import UsingDeclaration
+from surgeon.declaration.using_declaration.using_mode import UsingMode
 
 
 def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
@@ -47,6 +51,12 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
 
         case NamespaceDeclaration():
             yield from serialize_namespace_declaration(declaration)
+
+        case AliasDeclaration():
+            yield from serialize_alias_declaration(declaration)
+
+        case UsingDeclaration():
+            yield from serialize_using_declaration(declaration)
 
         case StaticAssertDeclaration(expression, message):
             yield chain(
@@ -213,6 +223,51 @@ def serialize_namespace_declaration(
 
         case _:
             raise TypeError(f"Unexpected type {type(declaration)}")
+
+
+def serialize_alias_declaration(
+    declaration: AliasDeclaration,
+) -> Iterable[Iterable[str]]:
+    match declaration.mode:
+        case AliasMode.DEFAULT:
+            yield (
+                "using",
+                declaration.new_identifier,
+                "=",
+                declaration.old_identifier,
+                ";",
+            )
+
+        case AliasMode.NAMESPACE:
+            yield (
+                "namespace",
+                declaration.new_identifier,
+                "=",
+                declaration.old_identifier,
+                ";",
+            )
+
+        case AliasMode.TYPE_DEF:
+            yield (
+                "typedef",
+                declaration.old_identifier,
+                declaration.new_identifier,
+                ";",
+            )
+
+
+def serialize_using_declaration(
+    declaration: UsingDeclaration,
+) -> Iterable[Iterable[str]]:
+    match declaration.mode:
+        case UsingMode.DEFAULT:
+            yield ("using", declaration.identifier, ";")
+
+        case UsingMode.ENUM:
+            yield ("using", "enum", declaration.identifier, ";")
+
+        case UsingMode.NAMESPACE:
+            yield ("using", "namespace", declaration.identifier, ";")
 
 
 def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:

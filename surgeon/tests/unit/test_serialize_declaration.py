@@ -3,6 +3,8 @@ from itertools import chain
 
 import pytest
 
+from surgeon.declaration.alias_declaration.alias_declaration import AliasDeclaration
+from surgeon.declaration.alias_declaration.alias_mode import AliasMode
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -33,15 +35,50 @@ from surgeon.declaration.namespace_declaration.namespace_definition import (
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
 from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
+from surgeon.declaration.using_declaration.using_declaration import UsingDeclaration
+from surgeon.declaration.using_declaration.using_mode import UsingMode
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
 from surgeon.tests.unit.mocks.mock_serialize_statement import FakeStatement
 
+ALIAS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        AliasDeclaration(
+            mode=AliasMode.DEFAULT,
+            old_identifier="old_identifier",
+            new_identifier="new_identifier",
+        ),
+        [
+            ["using", "new_identifier", "=", "old_identifier", ";"],
+        ],
+    ),
+    (
+        AliasDeclaration(
+            mode=AliasMode.NAMESPACE,
+            old_identifier="old_identifier",
+            new_identifier="new_identifier",
+        ),
+        [
+            ["namespace", "new_identifier", "=", "old_identifier", ";"],
+        ],
+    ),
+    (
+        AliasDeclaration(
+            mode=AliasMode.TYPE_DEF,
+            old_identifier="old_identifier",
+            new_identifier="new_identifier",
+        ),
+        [
+            ["typedef", "old_identifier", "new_identifier", ";"],
+        ],
+    ),
+)
+
 BASIC_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
         StaticAssertDeclaration(
-            FakeExpression("expression"),
-            FakeExpression("message"),
+            expression=FakeExpression("expression"),
+            message=FakeExpression("message"),
         ),
         [
             ["static_assert", "(", "expression", "message", ")", ";"],
@@ -613,13 +650,45 @@ NAMESPACE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] =
     ),
 )
 
+USING_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
+    (
+        UsingDeclaration(
+            mode=UsingMode.DEFAULT,
+            identifier="identifier",
+        ),
+        [
+            ["using", "identifier", ";"],
+        ],
+    ),
+    (
+        UsingDeclaration(
+            mode=UsingMode.ENUM,
+            identifier="identifier",
+        ),
+        [
+            ["using", "enum", "identifier", ";"],
+        ],
+    ),
+    (
+        UsingDeclaration(
+            mode=UsingMode.NAMESPACE,
+            identifier="identifier",
+        ),
+        [
+            ["using", "namespace", "identifier", ";"],
+        ],
+    ),
+)
+
 DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
+    ALIAS_DECLARATION_TEST_DATA,
     BASIC_DECLARATION_TEST_DATA,
     CLASS_DECLARATION_TEST_DATA,
     ENUM_DECLARATION_TEST_DATA,
     FUNCTION_DECLARATION_TEST_DATA,
     NAMESPACE_DECLARATION_TEST_DATA,
     SIMPLE_DECLARATION_TEST_DATA,
+    USING_DECLARATION_TEST_DATA,
 )
 
 
