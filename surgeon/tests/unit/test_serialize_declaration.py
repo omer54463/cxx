@@ -32,80 +32,126 @@ from surgeon.tests.unit.mocks.mock_serialize_literal import FakeLiteral
 BASIC_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
         StaticAssertDeclaration(FakeExpression("expression"), FakeLiteral("literal")),
-        [["static_assert", "(", "expression", "literal", ")", ";"]],
+        [
+            ["static_assert", "(", "expression", "literal", ")", ";"],
+        ],
     ),
 )
 
 ALIAS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
         AliasDeclaration("new_type", "old_type"),
-        [["using", "new_type", "=", "old_type", ";"]],
+        [
+            ["using", "new_type", "=", "old_type", ";"],
+        ],
     ),
     (
         NamespaceAliasDeclaration("new_identifier", "old_identifier"),
-        [["namespace", "new_identifier", "=", "old_identifier", ";"]],
+        [
+            ["namespace", "new_identifier", "=", "old_identifier", ";"],
+        ],
     ),
     (
         UsingDeclaration("identifier"),
-        [["using", "identifier", ";"]],
+        [
+            ["using", "identifier", ";"],
+        ],
     ),
     (
         UsingEnumDeclaration("identifier"),
-        [["using", "enum", "identifier", ";"]],
+        [
+            ["using", "enum", "identifier", ";"],
+        ],
     ),
     (
         UsingNamespaceDeclaration("identifier"),
-        [["using", "namespace", "identifier", ";"]],
+        [
+            ["using", "namespace", "identifier", ";"],
+        ],
     ),
     (
         TypeDefDeclaration("new_type", "old_type"),
-        [["typedef", "old_type", "new_type", ";"]],
+        [
+            ["typedef", "old_type", "new_type", ";"],
+        ],
     ),
 )
 
 CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
         ClassDeclaration("identifier"),
-        [["class", "identifier", ";"]],
+        [
+            ["class", "identifier", ";"],
+        ],
     ),
     (
         ClassDefinition("identifier"),
-        [["class", "identifier"], ["{"], ["}"]],
+        [
+            ["class", "identifier"],
+            ["{"],
+            ["}"],
+        ],
     ),
     (
         FinalClassDefinition("identifier"),
-        [["class", "identifier", "final"], ["{"], ["}"]],
+        [
+            ["class", "identifier", "final"],
+            ["{"],
+            ["}"],
+        ],
     ),
     (
         StructDeclaration("identifier"),
-        [["struct", "identifier", ";"]],
+        [
+            ["struct", "identifier", ";"],
+        ],
     ),
     (
         StructDefinition("identifier"),
-        [["struct", "identifier"], ["{"], ["}"]],
+        [
+            ["struct", "identifier"],
+            ["{"],
+            ["}"],
+        ],
     ),
     (
         FinalStructDefinition("identifier"),
-        [["struct", "identifier", "final"], ["{"], ["}"]],
+        [
+            ["struct", "identifier", "final"],
+            ["{"],
+            ["}"],
+        ],
     ),
 )
 
 ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
         EnumDeclaration("identifier"),
-        [["enum", "identifier", ";"]],
+        [
+            ["enum", "identifier", ";"],
+        ],
     ),
     (
         EnumDefinition("identifier"),
-        [["enum", "identifier"], ["{"], ["}"]],
+        [
+            ["enum", "identifier"],
+            ["{"],
+            ["}"],
+        ],
     ),
     (
         ScopedEnumDeclaration("identifier", "underlying_type"),
-        [["enum", "class", "identifier", ":", "underlying_type", ";"]],
+        [
+            ["enum", "class", "identifier", ":", "underlying_type", ";"],
+        ],
     ),
     (
         ScopedEnumDefinition("identifier", "underlying_type"),
-        [["enum", "class", "identifier", ":", "underlying_type"], ["{"], ["}"]],
+        [
+            ["enum", "class", "identifier", ":", "underlying_type"],
+            ["{"],
+            ["}"],
+        ],
     ),
 )
 
