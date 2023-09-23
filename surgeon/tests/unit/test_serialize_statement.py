@@ -82,8 +82,8 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
 ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         DoWhileStatement(
-            condition=FakeExpression("condition"),
             content=ExpressionStatement(FakeExpression("content")),
+            condition=FakeExpression("condition"),
         ),
         [
             ["do"],
