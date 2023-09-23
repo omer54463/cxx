@@ -11,4 +11,5 @@ class StructDefinition(ClassLikeDeclaration):
     identifier: str
     declaration_blocks: list[ClassDeclarationBlock] = field(default_factory=list)
     parents: list[ClassParent] = field(default_factory=list)
+    final: bool = False
     specifiers: Specifier = Specifier.NONE

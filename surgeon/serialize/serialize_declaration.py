@@ -17,8 +17,6 @@ from surgeon.declaration.clazz.class_declaration import ClassDeclaration
 from surgeon.declaration.clazz.class_definition import ClassDefinition
 from surgeon.declaration.clazz.class_like_declaration import ClassLikeDeclaration
 from surgeon.declaration.clazz.class_parent import ClassParent
-from surgeon.declaration.clazz.final_class_definition import FinalClassDefinition
-from surgeon.declaration.clazz.final_struct_definition import FinalStructDefinition
 from surgeon.declaration.clazz.struct_declaration import StructDeclaration
 from surgeon.declaration.clazz.struct_definition import StructDefinition
 from surgeon.declaration.declaration import Declaration
@@ -96,10 +94,17 @@ def serialize_class_like_declaration(
         case ClassDeclaration(identifier, specifiers):
             yield chain(serialize_specifiers(specifiers), ("class", identifier, ";"))
 
-        case ClassDefinition(identifier, declaration_blocks, parents, specifiers):
+        case ClassDefinition(
+            identifier,
+            declaration_blocks,
+            parents,
+            final,
+            specifiers,
+        ):
             yield chain(
                 serialize_specifiers(specifiers),
                 ("class", identifier),
+                ("final",) if final else (),
                 serialize_class_parents(parents),
             )
             yield ("{",)
@@ -109,39 +114,20 @@ def serialize_class_like_declaration(
                     yield from serialize_declaration(inner_declaration)
             yield ("}",)
 
-        case FinalClassDefinition(identifier, declaration_blocks, parents, specifiers):
-            yield chain(
-                serialize_specifiers(specifiers),
-                ("class", identifier, "final"),
-                serialize_class_parents(parents),
-            )
-            yield ("{",)
-            for declaration_block in declaration_blocks:
-                yield (f"{serialize_class_access(declaration_block.access)}:",)
-                for inner_declaration in declaration_block.declarations:
-                    yield from serialize_declaration(inner_declaration)
-            yield ("}",)
-
         case StructDeclaration(identifier, specifiers):
             yield chain(serialize_specifiers(specifiers), ("struct", identifier, ";"))
 
-        case StructDefinition(identifier, declaration_blocks, parents, specifiers):
+        case StructDefinition(
+            identifier,
+            declaration_blocks,
+            parents,
+            final,
+            specifiers,
+        ):
             yield chain(
                 serialize_specifiers(specifiers),
                 ("struct", identifier),
-                serialize_class_parents(parents),
-            )
-            yield ("{",)
-            for declaration_block in declaration_blocks:
-                yield (f"{serialize_class_access(declaration_block.access)}:",)
-                for inner_declaration in declaration_block.declarations:
-                    yield from serialize_declaration(inner_declaration)
-            yield ("}",)
-
-        case FinalStructDefinition(identifier, declaration_blocks, parents, specifiers):
-            yield chain(
-                serialize_specifiers(specifiers),
-                ("struct", identifier, "final"),
+                ("final",) if final else (),
                 serialize_class_parents(parents),
             )
             yield ("{",)

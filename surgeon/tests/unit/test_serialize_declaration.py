@@ -15,8 +15,6 @@ from surgeon.declaration.alias.using_namespace_declaration import (
 )
 from surgeon.declaration.clazz.class_declaration import ClassDeclaration
 from surgeon.declaration.clazz.class_definition import ClassDefinition
-from surgeon.declaration.clazz.final_class_definition import FinalClassDefinition
-from surgeon.declaration.clazz.final_struct_definition import FinalStructDefinition
 from surgeon.declaration.clazz.struct_declaration import StructDeclaration
 from surgeon.declaration.clazz.struct_definition import StructDefinition
 from surgeon.declaration.declaration import Declaration
@@ -93,7 +91,7 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        FinalClassDefinition("identifier"),
+        ClassDefinition("identifier", final=True),
         [
             ["class", "identifier", "final"],
             ["{"],
@@ -115,7 +113,7 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        FinalStructDefinition("identifier"),
+        StructDefinition("identifier", final=True),
         [
             ["struct", "identifier", "final"],
             ["{"],
