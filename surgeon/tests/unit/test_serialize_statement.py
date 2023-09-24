@@ -9,18 +9,22 @@ from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
 from surgeon.statement.iteration_statement.for_statement import ForStatement
+from surgeon.statement.iteration_statement.iteration_statement import IterationStatement
 from surgeon.statement.iteration_statement.while_statement import WhileStatement
 from surgeon.statement.jump_statement.break_statement import BreakStatement
 from surgeon.statement.jump_statement.continue_statement import ContinueStatement
 from surgeon.statement.jump_statement.goto_statement import GotoStatement
+from surgeon.statement.jump_statement.jump_statement import JumpStatement
 from surgeon.statement.jump_statement.return_statement import ReturnStatement
 from surgeon.statement.labeled_statement.case_statement import CaseStatement
 from surgeon.statement.labeled_statement.default_statement import DefaultStatement
 from surgeon.statement.labeled_statement.label_statement import (
     LabelStatement,
 )
+from surgeon.statement.labeled_statement.labeled_statement import LabeledStatement
 from surgeon.statement.null_statement import NullStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
+from surgeon.statement.selection_statement.selection_statement import SelectionStatement
 from surgeon.statement.selection_statement.switch_statement import SwitchStatement
 from surgeon.statement.statement import Statement
 from surgeon.tests.unit.flatten_lines import flatten_lines
@@ -63,7 +67,7 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
 )
 
-ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
+ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[IterationStatement, list[list[str]]]] = (
     (
         DoWhileStatement(
             content=ExpressionStatement(FakeExpression("content")),
@@ -123,7 +127,7 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
 )
 
-JUMP_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
+JUMP_STATEMENT_TEST_DATA: Iterable[tuple[JumpStatement, list[list[str]]]] = (
     (
         BreakStatement(),
         [
@@ -156,7 +160,7 @@ JUMP_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
 )
 
-LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
+LABELED_STATEMENT_TEST_DATA: Iterable[tuple[LabeledStatement, list[list[str]]]] = (
     (
         CaseStatement(FakeExpression("value")),
         [
@@ -177,7 +181,7 @@ LABELED_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     ),
 )
 
-SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
+SELECTION_STATEMENT_TEST_DATA: Iterable[tuple[SelectionStatement, list[list[str]]]] = (
     (
         IfStatement(
             constexpr=True,

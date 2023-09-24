@@ -1,17 +1,17 @@
 from dataclasses import dataclass
 
 from surgeon.expression.expression import Expression
+from surgeon.expression.operator.cast_mode import CastMode
 from surgeon.expression.operator.operator import (
     BinaryOperator,
     Operator,
     TrinaryOperator,
-    UnaryOperator,
 )
 
 
 @dataclass
 class FunctionCallOperator(Operator):
-    function_operand: Expression
+    operand: Expression
     argument_operands: list[Expression]
 
 
@@ -26,15 +26,13 @@ class ConditionalOperator(TrinaryOperator):
 
 
 @dataclass
-class SizeOfOperator(UnaryOperator):
-    pass
+class CCastOperator(Operator):
+    type: str
+    operand: Expression
 
 
 @dataclass
-class AlignOfOperator(UnaryOperator):
-    pass
-
-
-@dataclass
-class TypeIdOperator(UnaryOperator):
-    pass
+class CastOperator(Operator):
+    type: str
+    operand: Expression
+    mode: CastMode

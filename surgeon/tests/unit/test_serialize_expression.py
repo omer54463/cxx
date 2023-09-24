@@ -10,6 +10,12 @@ from surgeon.expression.literal.identifier_literal import IdentifierLiteral
 from surgeon.expression.literal.integer_base import IntegerBase
 from surgeon.expression.literal.integer_literal import IntegerLiteral
 from surgeon.expression.literal.string_literal import StringLiteral
+from surgeon.expression.operator.access_operators import (
+    DereferenceOperator,
+    MemberOperator,
+    ReferenceOperator,
+    SubscriptOperator,
+)
 from surgeon.serialize.serialize_expression import serialize_expression
 
 LITERAL_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
@@ -25,8 +31,47 @@ LITERAL_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
     (CharacterLiteral("c"), ["'c'"]),
 )
 
+ACCESS_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        SubscriptOperator(
+            left_operand=IdentifierLiteral("identifier"),
+            right_operand=IdentifierLiteral("subscript"),
+        ),
+        ["identifier", "[", "subscript", "]"],
+    ),
+    (
+        DereferenceOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["*", "identifier"],
+    ),
+    (
+        ReferenceOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["&", "identifier"],
+    ),
+    (
+        MemberOperator(
+            operand=IdentifierLiteral("identifier"),
+            identifier="member",
+            dereference=False,
+        ),
+        ["identifier", ".", "member"],
+    ),
+    (
+        MemberOperator(
+            operand=IdentifierLiteral("identifier"),
+            identifier="member",
+            dereference=True,
+        ),
+        ["identifier", "->", "member"],
+    ),
+)
+
 EXPRESSION_TEST_DATA: Iterable[tuple[Expression, list[str]]] = chain(
     LITERAL_TEST_DATA,
+    ACCESS_OPERATOR_TEST_DATA,
 )
 
 

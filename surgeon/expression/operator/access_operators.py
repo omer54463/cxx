@@ -10,12 +10,12 @@ class SubscriptOperator(BinaryOperator):
 
 
 @dataclass
-class IndirectionOperator(UnaryOperator):
+class DereferenceOperator(UnaryOperator):
     pass
 
 
 @dataclass
-class AddressOfOperator(UnaryOperator):
+class ReferenceOperator(UnaryOperator):
     pass
 
 
@@ -23,9 +23,4 @@ class AddressOfOperator(UnaryOperator):
 class MemberOperator(Operator):
     operand: Expression
     identifier: str
-
-
-@dataclass
-class PointerMemberOperator(UnaryOperator):
-    operand: Expression
-    identifier: str
+    dereference: bool

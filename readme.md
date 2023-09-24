@@ -14,8 +14,6 @@ This is not due to any inherent difficulty - other things were prioritized.
 - Typedef-specifier for declaration - `typedef struct { ... } S;`
 - Exception handling - `try`, `catch`, `throw`
 - Template and template specialization - `template <typename T>`
-- Variadic size-of operator - `sizeof...`,
-- No-except operator - `noexcept`
 - New operator - `new`
 - Delete operator - `delete`
 - Float/decimal literals - `0.123`

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from surgeon.expression.operator.operator import BinaryOperator, UnaryOperator
+from surgeon.expression.operator.operator import BinaryOperator
 
 
 @dataclass
@@ -34,7 +34,7 @@ class RemainderAssignmentOperator(BinaryOperator):
 
 
 @dataclass
-class BinaryNotAssignmentOperator(UnaryOperator):
+class BinaryNotAssignmentOperator(BinaryOperator):
     pass
 
 
