@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from types import ModuleType
 
@@ -13,7 +13,7 @@ class FakeDeclaration(Declaration):
     content: str
 
 
-def fake_serialize_declaration(declaration: Declaration) -> Iterable[str]:
+def fake_serialize_declaration(declaration: Declaration) -> Iterator[str]:
     assert isinstance(declaration, FakeDeclaration), "Invalid declaration type in test"
     yield declaration.content
     yield ";"

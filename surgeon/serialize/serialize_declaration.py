@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterator
 
 from surgeon.declaration.alias_declaration.alias_declaration import AliasDeclaration
 from surgeon.declaration.alias_declaration.alias_mode import AliasMode
@@ -32,7 +32,7 @@ from surgeon.declaration.using_declaration.using_declaration import UsingDeclara
 from surgeon.declaration.using_declaration.using_mode import UsingMode
 
 
-def serialize_declaration(declaration: Declaration) -> Iterable[str]:
+def serialize_declaration(declaration: Declaration) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match declaration:
@@ -67,12 +67,12 @@ def serialize_declaration(declaration: Declaration) -> Iterable[str]:
             yield ";"
 
 
-def serialize_optional_declaration(declaration: Declaration | None) -> Iterable[str]:
+def serialize_optional_declaration(declaration: Declaration | None) -> Iterator[str]:
     if declaration is not None:
         yield from serialize_declaration(declaration)
 
 
-def serialize_class_declaration(declaration: ClassDeclaration) -> Iterable[str]:
+def serialize_class_declaration(declaration: ClassDeclaration) -> Iterator[str]:
     yield from declaration.specifiers
     yield "struct" if declaration.struct else "class"
     yield declaration.identifier
@@ -97,7 +97,7 @@ def serialize_class_declaration(declaration: ClassDeclaration) -> Iterable[str]:
     yield ";"
 
 
-def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[str]:
+def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     yield from declaration.specifiers
@@ -125,7 +125,7 @@ def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[str]:
     yield ";"
 
 
-def serialize_function_declaration(declaration: FunctionDeclaration) -> Iterable[str]:
+def serialize_function_declaration(declaration: FunctionDeclaration) -> Iterator[str]:
     from surgeon.serialize.serialize_statement import serialize_statement
 
     yield from declaration.specifiers
@@ -144,7 +144,7 @@ def serialize_function_declaration(declaration: FunctionDeclaration) -> Iterable
         yield ";"
 
 
-def serialize_simple_declaration(declaration: SimpleDeclaration) -> Iterable[str]:
+def serialize_simple_declaration(declaration: SimpleDeclaration) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     yield from declaration.specifiers
@@ -158,7 +158,7 @@ def serialize_simple_declaration(declaration: SimpleDeclaration) -> Iterable[str
     yield ";"
 
 
-def serialize_namespace_declaration(declaration: NamespaceDeclaration) -> Iterable[str]:
+def serialize_namespace_declaration(declaration: NamespaceDeclaration) -> Iterator[str]:
     yield from declaration.specificers
     yield "namespace"
     yield declaration.identifier
@@ -173,7 +173,7 @@ def serialize_namespace_declaration(declaration: NamespaceDeclaration) -> Iterab
         yield ";"
 
 
-def serialize_alias_declaration(declaration: AliasDeclaration) -> Iterable[str]:
+def serialize_alias_declaration(declaration: AliasDeclaration) -> Iterator[str]:
     match declaration.mode:
         case AliasMode.DEFAULT:
             yield "using"
@@ -195,7 +195,7 @@ def serialize_alias_declaration(declaration: AliasDeclaration) -> Iterable[str]:
     yield ";"
 
 
-def serialize_using_declaration(declaration: UsingDeclaration) -> Iterable[str]:
+def serialize_using_declaration(declaration: UsingDeclaration) -> Iterator[str]:
     yield "using"
 
     match declaration.mode:
@@ -209,7 +209,7 @@ def serialize_using_declaration(declaration: UsingDeclaration) -> Iterable[str]:
     yield ";"
 
 
-def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
+def serialize_class_parents(parents: list[ClassBase]) -> Iterator[str]:
     if len(parents) == 0:
         return
 
@@ -224,7 +224,7 @@ def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
         yield parent.identifier
 
 
-def serialize_class_access(access: ClassAccess) -> Iterable[str]:
+def serialize_class_access(access: ClassAccess) -> Iterator[str]:
     match access:
         case ClassAccess.PUBLIC:
             yield "public"
@@ -236,7 +236,7 @@ def serialize_class_access(access: ClassAccess) -> Iterable[str]:
             yield "private"
 
 
-def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterable[str]:
+def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     yield "("
@@ -259,7 +259,7 @@ def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterable[
 
 def serialize_constructor_initializers(
     initializers: list[ConstructorInitializer],
-) -> Iterable[str]:
+) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     if len(initializers) == 0:

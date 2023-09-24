@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from types import ModuleType
 
@@ -13,7 +13,7 @@ class FakeExpression(Expression):
     content: str
 
 
-def fake_serialize_expression(expression: Expression) -> Iterable[str]:
+def fake_serialize_expression(expression: Expression) -> Iterator[str]:
     assert isinstance(expression, FakeExpression), "Invalid expression type in test"
     yield expression.content
 

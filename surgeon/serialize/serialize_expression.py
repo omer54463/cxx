@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterator
 
 from surgeon.expression.expression import Expression
 from surgeon.expression.literal.boolean_literal import BooleanLiteral
@@ -31,7 +31,7 @@ from surgeon.serialize.operator_symbols import (
 )
 
 
-def serialize_expression(expression: Expression) -> Iterable[str]:
+def serialize_expression(expression: Expression) -> Iterator[str]:
     match expression:
         case Operator():
             yield from serialize_operator(expression)
@@ -43,7 +43,7 @@ def serialize_expression(expression: Expression) -> Iterable[str]:
             raise TypeError(f"Unexpected type {type(expression)}")
 
 
-def serialize_optional_expression(expression: Expression | None) -> Iterable[str]:
+def serialize_optional_expression(expression: Expression | None) -> Iterator[str]:
     if expression is not None:
         yield from serialize_expression(expression)
 
@@ -51,7 +51,7 @@ def serialize_optional_expression(expression: Expression | None) -> Iterable[str
 def serialize_precedenced_expression(
     expression: Expression,
     against: Expression | type[Expression],
-) -> Iterable[str]:
+) -> Iterator[str]:
     if get_precedence(expression) > get_precedence(against):
         yield "("
         yield from serialize_expression(expression)
@@ -61,7 +61,7 @@ def serialize_precedenced_expression(
         yield from serialize_expression(expression)
 
 
-def serialize_operator(operator: Operator) -> Iterable[str]:
+def serialize_operator(operator: Operator) -> Iterator[str]:
     match operator:
         case UnaryOperator():
             yield from serialize_unary_operator(operator)
@@ -96,7 +96,7 @@ def serialize_operator(operator: Operator) -> Iterable[str]:
             yield ")"
 
 
-def serialize_unary_operator(operator: UnaryOperator) -> Iterable[str]:
+def serialize_unary_operator(operator: UnaryOperator) -> Iterator[str]:
     symbols = UNARY_OPERATOR_SYMBOLS[type(operator)]
 
     if symbols.before is not None:
@@ -108,7 +108,7 @@ def serialize_unary_operator(operator: UnaryOperator) -> Iterable[str]:
         yield symbols.after
 
 
-def serialize_binary_operator(operator: BinaryOperator) -> Iterable[str]:
+def serialize_binary_operator(operator: BinaryOperator) -> Iterator[str]:
     symbols = BINARY_OPERATOR_SYMBOLS[type(operator)]
 
     if symbols.before is not None:
@@ -125,7 +125,7 @@ def serialize_binary_operator(operator: BinaryOperator) -> Iterable[str]:
         yield symbols.after
 
 
-def serialize_trinary_operator(operator: TrinaryOperator) -> Iterable[str]:
+def serialize_trinary_operator(operator: TrinaryOperator) -> Iterator[str]:
     symbols = TRINARY_OPERATOR_SYMBOLS[type(operator)]
 
     if symbols.before is not None:
@@ -147,7 +147,7 @@ def serialize_trinary_operator(operator: TrinaryOperator) -> Iterable[str]:
         yield symbols.after
 
 
-def serialize_cast_operator(operator: CastOperator) -> Iterable[str]:
+def serialize_cast_operator(operator: CastOperator) -> Iterator[str]:
     match operator.mode:
         case CastMode.STATIC:
             yield "static_cast"
@@ -169,7 +169,7 @@ def serialize_cast_operator(operator: CastOperator) -> Iterable[str]:
     yield ")"
 
 
-def serialize_literal(literal: Literal) -> Iterable[str]:
+def serialize_literal(literal: Literal) -> Iterator[str]:
     match literal:
         case BooleanLiteral(value):
             yield "true" if value else "false"
@@ -188,7 +188,7 @@ def serialize_literal(literal: Literal) -> Iterable[str]:
             yield f"'{value}'"
 
 
-def serialize_integer_literal(literal: IntegerLiteral) -> Iterable[str]:
+def serialize_integer_literal(literal: IntegerLiteral) -> Iterator[str]:
     match literal.base:
         case IntegerBase.BINARY:
             yield bin(literal.value)

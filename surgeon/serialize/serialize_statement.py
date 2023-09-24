@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterator
 
 from surgeon.expression.expression import Expression
 from surgeon.statement.compound_statement import CompountStatement
@@ -26,7 +26,7 @@ from surgeon.statement.selection_statement.switch_statement import SwitchStateme
 from surgeon.statement.statement import Statement
 
 
-def serialize_statement(statement: Statement) -> Iterable[str]:
+def serialize_statement(statement: Statement) -> Iterator[str]:
     from surgeon.serialize.serialize_declaration import serialize_declaration
     from surgeon.serialize.serialize_expression import serialize_expression
 
@@ -60,16 +60,12 @@ def serialize_statement(statement: Statement) -> Iterable[str]:
             yield ";"
 
 
-def serialize_optional_statement(
-    statement: Statement | None,
-) -> Iterable[str]:
+def serialize_optional_statement(statement: Statement | None) -> Iterator[str]:
     if statement is not None:
         yield from serialize_statement(statement)
 
 
-def serialize_iteration_statement(
-    statement: IterationStatement,
-) -> Iterable[str]:
+def serialize_iteration_statement(statement: IterationStatement) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import (
         serialize_expression,
         serialize_optional_expression,
@@ -103,9 +99,7 @@ def serialize_iteration_statement(
             yield from serialize_statement(content)
 
 
-def serialize_jump_statement(
-    statement: JumpStatement,
-) -> Iterable[str]:
+def serialize_jump_statement(statement: JumpStatement) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match statement:
@@ -129,9 +123,7 @@ def serialize_jump_statement(
     yield ";"
 
 
-def serialize_labeled_statement(
-    statement: LabeledStatement,
-) -> Iterable[str]:
+def serialize_labeled_statement(statement: LabeledStatement) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match statement:
@@ -148,9 +140,7 @@ def serialize_labeled_statement(
     yield ":"
 
 
-def serialize_selection_statement(
-    statement: SelectionStatement,
-) -> Iterable[str]:
+def serialize_selection_statement(statement: SelectionStatement) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match statement:

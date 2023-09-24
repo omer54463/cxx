@@ -1,5 +1,5 @@
-from collections.abc import Iterable
+from collections.abc import Iterator
 
 
-def flatten_lines(lines: Iterable[Iterable[str]]) -> Iterable[str]:
+def flatten_lines(lines: list[list[str]]) -> Iterator[str]:
     yield from (word for line in lines for word in line)
