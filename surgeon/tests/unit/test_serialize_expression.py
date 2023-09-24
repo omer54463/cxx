@@ -16,6 +16,63 @@ from surgeon.expression.operator.access_operators import (
     ReferenceOperator,
     SubscriptOperator,
 )
+from surgeon.expression.operator.arithmetic_operators import (
+    AdditionOperator,
+    BinaryAndOperator,
+    BinaryNotOperator,
+    BinaryOrOperator,
+    BinaryXorOperator,
+    DivisionOperator,
+    LeftShiftOperator,
+    MinusOperator,
+    MultiplicationOperator,
+    PlusOperator,
+    RemainderOperator,
+    RightShiftOperator,
+    SubtractionOperator,
+)
+from surgeon.expression.operator.assignment_operators import (
+    AdditionAssignmentOperator,
+    AssignmentOperator,
+    BinaryAndAssignmentOperator,
+    BinaryNotAssignmentOperator,
+    BinaryOrAssignmentOperator,
+    BinaryXorAssignmentOperator,
+    DivisionAssignmentOperator,
+    LeftShiftAssignmentOperator,
+    MultiplicationAssignmentOperator,
+    RemainderAssignmentOperator,
+    RightShiftAssignmentOperator,
+    SubtractionAssignmentOperator,
+)
+from surgeon.expression.operator.cast_mode import CastMode
+from surgeon.expression.operator.comparison_operators import (
+    EqualsOperator,
+    GreaterEqualsOperator,
+    GreaterOperator,
+    LesserEqualsOperator,
+    LesserOperator,
+    NotEqualsOperator,
+    ThreeWayComparisonOperator,
+)
+from surgeon.expression.operator.increment_decrement_operators import (
+    PostDecrementOperator,
+    PostIncrementOperator,
+    PreDecrementOperator,
+    PreIncrementOperator,
+)
+from surgeon.expression.operator.logical_operators import (
+    AndOperator,
+    NotOperator,
+    OrOperator,
+)
+from surgeon.expression.operator.other_operators import (
+    CastOperator,
+    CCastOperator,
+    CommaOperator,
+    ConditionalOperator,
+    FunctionCallOperator,
+)
 from surgeon.serialize.serialize_expression import serialize_expression
 
 LITERAL_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
@@ -69,9 +126,407 @@ ACCESS_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
     ),
 )
 
+ARITHMETIC_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        PlusOperator(operand=IdentifierLiteral("identifier")),
+        ["+", "identifier"],
+    ),
+    (
+        MinusOperator(operand=IdentifierLiteral("identifier")),
+        ["-", "identifier"],
+    ),
+    (
+        AdditionOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "+", "right"],
+    ),
+    (
+        SubtractionOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "-", "right"],
+    ),
+    (
+        MultiplicationOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "*", "right"],
+    ),
+    (
+        DivisionOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "/", "right"],
+    ),
+    (
+        RemainderOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "%", "right"],
+    ),
+    (
+        BinaryNotOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["~", "identifier"],
+    ),
+    (
+        BinaryAndOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "&", "right"],
+    ),
+    (
+        BinaryOrOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "|", "right"],
+    ),
+    (
+        BinaryXorOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "^", "right"],
+    ),
+    (
+        LeftShiftOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "<<", "right"],
+    ),
+    (
+        RightShiftOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", ">>", "right"],
+    ),
+)
+
+ASSIGNMENT_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        AssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "=", "right"],
+    ),
+    (
+        AdditionAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "+=", "right"],
+    ),
+    (
+        SubtractionAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "-=", "right"],
+    ),
+    (
+        MultiplicationAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "*=", "right"],
+    ),
+    (
+        DivisionAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "/=", "right"],
+    ),
+    (
+        RemainderAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "%=", "right"],
+    ),
+    (
+        BinaryNotAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "~=", "right"],
+    ),
+    (
+        BinaryAndAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "&=", "right"],
+    ),
+    (
+        BinaryOrAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "|=", "right"],
+    ),
+    (
+        BinaryXorAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "^=", "right"],
+    ),
+    (
+        LeftShiftAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "<<=", "right"],
+    ),
+    (
+        RightShiftAssignmentOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", ">>=", "right"],
+    ),
+)
+
+COMPARISON_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        EqualsOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "==", "right"],
+    ),
+    (
+        NotEqualsOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "!=", "right"],
+    ),
+    (
+        LesserOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "<", "right"],
+    ),
+    (
+        GreaterOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", ">", "right"],
+    ),
+    (
+        LesserEqualsOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "<=", "right"],
+    ),
+    (
+        GreaterEqualsOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", ">=", "right"],
+    ),
+    (
+        ThreeWayComparisonOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "<=>", "right"],
+    ),
+)
+
+INCREMENT_DECREMENT_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        PreIncrementOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["++", "identifier"],
+    ),
+    (
+        PreDecrementOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["--", "identifier"],
+    ),
+    (
+        PostIncrementOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["identifier", "++"],
+    ),
+    (
+        PostDecrementOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["identifier", "--"],
+    ),
+)
+
+LOGICAL_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        NotOperator(
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["!", "identifier"],
+    ),
+    (
+        AndOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "&&", "right"],
+    ),
+    (
+        OrOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "||", "right"],
+    ),
+)
+
+OTHER_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        FunctionCallOperator(
+            operand=IdentifierLiteral("identifier"),
+            argument_operands=[],
+        ),
+        ["identifier", "(", ")"],
+    ),
+    (
+        FunctionCallOperator(
+            operand=IdentifierLiteral("identifier"),
+            argument_operands=[
+                IdentifierLiteral("identifier"),
+            ],
+        ),
+        ["identifier", "(", "identifier", ")"],
+    ),
+    (
+        FunctionCallOperator(
+            operand=IdentifierLiteral("identifier"),
+            argument_operands=[
+                IdentifierLiteral("identifier"),
+                IdentifierLiteral("identifier"),
+            ],
+        ),
+        ["identifier", "(", "identifier", ",", "identifier", ")"],
+    ),
+    (
+        CommaOperator(
+            left_operand=IdentifierLiteral("left"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", ",", "right"],
+    ),
+    (
+        ConditionalOperator(
+            left_operand=IdentifierLiteral("left"),
+            middle_operand=IdentifierLiteral("middle"),
+            right_operand=IdentifierLiteral("right"),
+        ),
+        ["left", "?", "middle", ":", "right"],
+    ),
+    (
+        CCastOperator(
+            type="type",
+            operand=IdentifierLiteral("identifier"),
+        ),
+        ["(", "type", ")", "identifier"],
+    ),
+    (
+        CastOperator(
+            type="type",
+            operand=IdentifierLiteral("identifier"),
+            mode=CastMode.STATIC,
+        ),
+        ["static_cast", "<", "type", ">", "(", "identifier", ")"],
+    ),
+    (
+        CastOperator(
+            type="type",
+            operand=IdentifierLiteral("identifier"),
+            mode=CastMode.DYNAMIC,
+        ),
+        ["dynamic_cast", "<", "type", ">", "(", "identifier", ")"],
+    ),
+    (
+        CastOperator(
+            type="type",
+            operand=IdentifierLiteral("identifier"),
+            mode=CastMode.CONST,
+        ),
+        ["const_cast", "<", "type", ">", "(", "identifier", ")"],
+    ),
+    (
+        CastOperator(
+            type="type",
+            operand=IdentifierLiteral("identifier"),
+            mode=CastMode.REINTERPRET,
+        ),
+        ["reinterpret_cast", "<", "type", ">", "(", "identifier", ")"],
+    ),
+)
+
+PRECEDENCE_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+    (
+        AdditionOperator(
+            MultiplicationOperator(IdentifierLiteral("a"), IdentifierLiteral("b")),
+            IdentifierLiteral("c"),
+        ),
+        ["a", "*", "b", "+", "c"],
+    ),
+    (
+        MultiplicationOperator(
+            IdentifierLiteral("a"),
+            AdditionOperator(IdentifierLiteral("b"), IdentifierLiteral("c")),
+        ),
+        ["a", "*", "(", "b", "+", "c", ")"],
+    ),
+    (
+        MultiplicationOperator(
+            AdditionOperator(IdentifierLiteral("a"), IdentifierLiteral("b")),
+            IdentifierLiteral("c"),
+        ),
+        ["(", "a", "+", "b", ")", "*", "c"],
+    ),
+    (
+        CCastOperator("C", MemberOperator(IdentifierLiteral("a"), "b", False)),
+        ["(", "C", ")", "a", ".", "b"],
+    ),
+    (
+        MemberOperator(CCastOperator("C", IdentifierLiteral("a")), "b", False),
+        ["(", "(", "C", ")", "a", ")", ".", "b"],
+    ),
+)
+
 EXPRESSION_TEST_DATA: Iterable[tuple[Expression, list[str]]] = chain(
     LITERAL_TEST_DATA,
     ACCESS_OPERATOR_TEST_DATA,
+    ARITHMETIC_OPERATOR_TEST_DATA,
+    ASSIGNMENT_OPERATOR_TEST_DATA,
+    COMPARISON_OPERATOR_TEST_DATA,
+    INCREMENT_DECREMENT_OPERATOR_TEST_DATA,
+    LOGICAL_OPERATOR_TEST_DATA,
+    OTHER_OPERATOR_TEST_DATA,
+    PRECEDENCE_TEST_DATA,
 )
 
 
