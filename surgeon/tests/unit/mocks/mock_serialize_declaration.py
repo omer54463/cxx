@@ -13,9 +13,10 @@ class FakeDeclaration(Declaration):
     content: str
 
 
-def fake_serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
+def fake_serialize_declaration(declaration: Declaration) -> Iterable[str]:
     assert isinstance(declaration, FakeDeclaration), "Invalid declaration type in test"
-    yield (declaration.content,)
+    yield declaration.content
+    yield ";"
 
 
 @pytest.fixture()

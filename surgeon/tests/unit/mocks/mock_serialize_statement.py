@@ -13,9 +13,10 @@ class FakeStatement(Statement):
     content: str
 
 
-def fake_serialize_statement(statement: Statement) -> Iterable[Iterable[str]]:
+def fake_serialize_statement(statement: Statement) -> Iterable[str]:
     assert isinstance(statement, FakeStatement), "Invalid statement type in test"
-    yield (statement.content, ";")
+    yield statement.content
+    yield ";"
 
 
 @pytest.fixture()

@@ -38,6 +38,7 @@ from surgeon.declaration.static_assert_declaration import StaticAssertDeclaratio
 from surgeon.declaration.using_declaration.using_declaration import UsingDeclaration
 from surgeon.declaration.using_declaration.using_mode import UsingMode
 from surgeon.serialize.serialize_declaration import serialize_declaration
+from surgeon.tests.unit.flatten_lines import flatten_lines
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
 from surgeon.tests.unit.mocks.mock_serialize_statement import FakeStatement
 
@@ -81,7 +82,7 @@ BASIC_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             message=FakeExpression("message"),
         ),
         [
-            ["static_assert", "(", "expression", "message", ")", ";"],
+            ["static_assert", "(", "expression", ",", "message", ")", ";"],
         ],
     ),
 )
@@ -275,7 +276,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         [
             ["enum", "identifier"],
             ["{"],
-            ["}"],
+            ["}", ";"],
         ],
     ),
     (
@@ -288,7 +289,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         [
             ["specifier", "enum", "identifier"],
             ["{"],
-            ["}"],
+            ["}", ";"],
         ],
     ),
     (
@@ -301,7 +302,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         [
             ["specifier", "enum", "class", "identifier"],
             ["{"],
-            ["}"],
+            ["}", ";"],
         ],
     ),
     (
@@ -315,7 +316,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             ["enum", "identifier"],
             ["{"],
             ["member", ","],
-            ["}"],
+            ["}", ";"],
         ],
     ),
     (
@@ -333,7 +334,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             ["{"],
             ["member_1", ","],
             ["member_2", ","],
-            ["}"],
+            ["}", ";"],
         ],
     ),
     (
@@ -349,7 +350,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             ["enum", "identifier"],
             ["{"],
             ["member", "=", "expression", ","],
-            ["}"],
+            ["}", ";"],
         ],
     ),
 )
@@ -441,12 +442,21 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
             return_type="return_type",
             identifier="identifier",
             arguments=[
-                FunctionArgument(type="t1", identifier="i1", default=None),
-                FunctionArgument(type="t2", identifier="i2", default=None),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=None,
+                ),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=None,
+                ),
             ],
         ),
         [
-            ["return_type", "identifier", "(", "t1", "i1", ",", "t2", "i2", ")", ";"],
+            ["return_type", "identifier"],
+            ["(", "type", "identifier", ",", "type", "identifier", ")", ";"],
         ],
     ),
     (
@@ -455,11 +465,16 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
             return_type="return_type",
             identifier="identifier",
             arguments=[
-                FunctionArgument(type="t", identifier="i", default=FakeExpression("e")),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=FakeExpression("expression"),
+                ),
             ],
         ),
         [
-            ["return_type", "identifier", "(", "t", "i", "=", "e", ")", ";"],
+            ["return_type", "identifier"],
+            ["(", "type", "identifier", "=", "expression", ")", ";"],
         ],
     ),
     (
@@ -522,8 +537,16 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
             return_type="return_type",
             identifier="identifier",
             arguments=[
-                FunctionArgument(type="t1", identifier="i1", default=None),
-                FunctionArgument(type="t2", identifier="i2", default=None),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=None,
+                ),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=None,
+                ),
             ],
             initializers=[],
             statements=[
@@ -531,7 +554,8 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
             ],
         ),
         [
-            ["return_type", "identifier", "(", "t1", "i1", ",", "t2", "i2", ")"],
+            ["return_type", "identifier"],
+            ["(", "type", "identifier", ",", "type", "identifier", ")"],
             ["{"],
             ["statement", ";"],
             ["}"],
@@ -543,13 +567,18 @@ FUNCTION_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = 
             return_type="return_type",
             identifier="identifier",
             arguments=[
-                FunctionArgument(type="t", identifier="i", default=FakeExpression("e")),
+                FunctionArgument(
+                    type="type",
+                    identifier="identifier",
+                    default=FakeExpression("expression"),
+                ),
             ],
             initializers=[],
             statements=[FakeStatement("statement")],
         ),
         [
-            ["return_type", "identifier", "(", "t", "i", "=", "e", ")"],
+            ["return_type", "identifier"],
+            ["(", "type", "identifier", "=", "expression", ")"],
             ["{"],
             ["statement", ";"],
             ["}"],
@@ -693,12 +722,12 @@ DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = chain(
 
 
 @pytest.mark.usefixtures("mock_serialize_expression", "mock_serialize_statement")
-@pytest.mark.parametrize(("declaration", "expected"), DECLARATION_TEST_DATA)
+@pytest.mark.parametrize(("declaration", "expected_lines"), DECLARATION_TEST_DATA)
 def test_serialize_declaration(
     declaration: Declaration,
-    expected: list[list[str]],
+    expected_lines: list[list[str]],
 ) -> None:
-    declaration_lines = serialize_declaration(declaration)
-    declaration_lines_as_lists = [list(line) for line in declaration_lines]
+    result = list(serialize_declaration(declaration))
+    expected = list(flatten_lines(expected_lines))
 
-    assert declaration_lines_as_lists == expected
+    assert result == expected

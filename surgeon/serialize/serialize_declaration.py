@@ -1,5 +1,4 @@
 from collections.abc import Iterable
-from itertools import chain
 
 from surgeon.declaration.alias_declaration.alias_declaration import AliasDeclaration
 from surgeon.declaration.alias_declaration.alias_mode import AliasMode
@@ -33,7 +32,7 @@ from surgeon.declaration.using_declaration.using_declaration import UsingDeclara
 from surgeon.declaration.using_declaration.using_mode import UsingMode
 
 
-def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
+def serialize_declaration(declaration: Declaration) -> Iterable[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     match declaration:
@@ -59,215 +58,155 @@ def serialize_declaration(declaration: Declaration) -> Iterable[Iterable[str]]:
             yield from serialize_using_declaration(declaration)
 
         case StaticAssertDeclaration(expression, message):
-            yield chain(
-                ("static_assert", "("),
-                serialize_expression(expression),
-                serialize_expression(message),
-                (")", ";"),
-            )
-
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+            yield "static_assert"
+            yield "("
+            yield from serialize_expression(expression)
+            yield ","
+            yield from serialize_expression(message)
+            yield ")"
+            yield ";"
 
 
-def serialize_optional_declaration(
-    declaration: Declaration | None,
-) -> Iterable[Iterable[str]]:
+def serialize_optional_declaration(declaration: Declaration | None) -> Iterable[str]:
     if declaration is not None:
         yield from serialize_declaration(declaration)
 
 
-def serialize_class_declaration(
-    declaration: ClassDeclaration,
-) -> Iterable[Iterable[str]]:
-    match declaration:
-        case ClassDefinition(
-            specifiers,
-            struct,
-            identifier,
-            final,
-            bases,
-            declaration_blocks,
-        ):
-            yield chain(
-                specifiers,
-                ("struct" if struct else "class", identifier),
-                ("final",) if final else (),
-                serialize_class_parents(bases),
-            )
-            yield ("{",)
-            for declaration_block in declaration_blocks:
-                if declaration_block.access is not None:
-                    yield (serialize_class_access(declaration_block.access), ":")
-                for inner_declaration in declaration_block.declarations:
-                    yield from serialize_declaration(inner_declaration)
-            yield ("}", ";")
+def serialize_class_declaration(declaration: ClassDeclaration) -> Iterable[str]:
+    yield from declaration.specifiers
+    yield "struct" if declaration.struct else "class"
+    yield declaration.identifier
 
-        case ClassDeclaration(specifiers, struct, identifier):
-            yield chain(
-                specifiers,
-                ("struct" if struct else "class", identifier, ";"),
-            )
+    if isinstance(declaration, ClassDefinition):
+        if declaration.final:
+            yield "final"
+        yield from serialize_class_parents(declaration.bases)
 
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+        yield "{"
+
+        for declaration_block in declaration.declaration_blocks:
+            if declaration_block.access is not None:
+                yield serialize_class_access(declaration_block.access)
+                yield ":"
+
+            for inner_declaration in declaration_block.declarations:
+                yield from serialize_declaration(inner_declaration)
+
+        yield "}"
+
+    yield ";"
 
 
-def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[Iterable[str]]:
+def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterable[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
-    match declaration:
-        case EnumDefinition(specifiers, scoped, identifier, members):
-            yield chain(
-                specifiers,
-                ("enum",),
-                ("class",) if scoped else (),
-                (identifier,),
-            )
-            yield ("{",)
-            for member in members:
-                if member.value is None:
-                    yield (member.identifier, ",")
-                else:
-                    yield chain(
-                        (member.identifier, "="),
-                        serialize_expression(member.value),
-                        (",",),
-                    )
-            yield ("}")
+    yield from declaration.specifiers
+    yield "enum"
+    if declaration.scoped:
+        yield "class"
+    yield declaration.identifier
 
-        case EnumDeclaration(specifiers, scoped, identifier):
-            yield chain(
-                specifiers,
-                ("enum",),
-                ("class",) if scoped else (),
-                (identifier, ";"),
-            )
+    if isinstance(declaration, EnumDefinition):
+        yield "{"
 
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+        for member in declaration.members:
+            if member.value is None:
+                yield member.identifier
+                yield ","
+
+            else:
+                yield member.identifier
+                yield "="
+                yield from serialize_expression(member.value)
+                yield ","
+
+        yield "}"
+
+    yield ";"
 
 
-def serialize_function_declaration(
-    declaration: FunctionDeclaration,
-) -> Iterable[Iterable[str]]:
+def serialize_function_declaration(declaration: FunctionDeclaration) -> Iterable[str]:
     from surgeon.serialize.serialize_statement import serialize_statement
 
-    match declaration:
-        case FunctionDefinition(
-            specifiers,
-            return_type,
-            identifier,
-            arguments,
-            initializers,
-            statements,
-        ):
-            yield chain(
-                specifiers,
-                (return_type, identifier),
-                serialize_function_arguments(arguments),
-                serialize_constructor_initializers(initializers),
-            )
-            yield ("{",)
-            for statement in statements:
-                yield from serialize_statement(statement)
-            yield ("}",)
+    yield from declaration.specifiers
+    yield declaration.return_type
+    yield declaration.identifier
+    yield from serialize_function_arguments(declaration.arguments)
 
-        case FunctionDeclaration(specifiers, return_type, identifier, arguments):
-            yield chain(
-                specifiers,
-                (return_type, identifier),
-                serialize_function_arguments(arguments),
-                ";",
-            )
+    if isinstance(declaration, FunctionDefinition):
+        yield from serialize_constructor_initializers(declaration.initializers)
+        yield "{"
+        for statement in declaration.statements:
+            yield from serialize_statement(statement)
+        yield "}"
 
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+    else:
+        yield ";"
 
 
-def serialize_simple_declaration(
-    declaration: SimpleDeclaration,
-) -> Iterable[Iterable[str]]:
+def serialize_simple_declaration(declaration: SimpleDeclaration) -> Iterable[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
-    match declaration:
-        case SimpleDefinition(specifiers, type_, identifier, initializer):
-            yield chain(
-                specifiers,
-                (type_, identifier),
-                ("=",),
-                serialize_expression(initializer),
-                (";",),
-            )
+    yield from declaration.specifiers
+    yield declaration.type
+    yield declaration.identifier
 
-        case SimpleDeclaration(specifiers, type_, identifier):
-            yield chain(specifiers, (type_, identifier, ";"))
+    if isinstance(declaration, SimpleDefinition):
+        yield "="
+        yield from serialize_expression(declaration.value)
 
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+    yield ";"
 
 
-def serialize_namespace_declaration(
-    declaration: NamespaceDeclaration,
-) -> Iterable[Iterable[str]]:
-    match declaration:
-        case NamespaceDefinition(specificers, identifier, declarations):
-            yield chain(specificers, ("namespace", identifier))
-            yield ("{",)
-            for inner_declaration in declarations:
-                yield from serialize_declaration(inner_declaration)
-            yield ("}",)
+def serialize_namespace_declaration(declaration: NamespaceDeclaration) -> Iterable[str]:
+    yield from declaration.specificers
+    yield "namespace"
+    yield declaration.identifier
 
-        case NamespaceDeclaration(specificers, identifier):
-            yield chain(specificers, ("namespace", identifier, ";"))
+    if isinstance(declaration, NamespaceDefinition):
+        yield "{"
+        for inner_declaration in declaration.declarations:
+            yield from serialize_declaration(inner_declaration)
+        yield "}"
 
-        case _:
-            raise TypeError(f"Unexpected type {type(declaration)}")
+    else:
+        yield ";"
 
 
-def serialize_alias_declaration(
-    declaration: AliasDeclaration,
-) -> Iterable[Iterable[str]]:
+def serialize_alias_declaration(declaration: AliasDeclaration) -> Iterable[str]:
     match declaration.mode:
         case AliasMode.DEFAULT:
-            yield (
-                "using",
-                declaration.new_identifier,
-                "=",
-                declaration.old_identifier,
-                ";",
-            )
+            yield "using"
+            yield declaration.new_identifier
+            yield "="
+            yield declaration.old_identifier
 
         case AliasMode.NAMESPACE:
-            yield (
-                "namespace",
-                declaration.new_identifier,
-                "=",
-                declaration.old_identifier,
-                ";",
-            )
+            yield "namespace"
+            yield declaration.new_identifier
+            yield "="
+            yield declaration.old_identifier
 
         case AliasMode.TYPE_DEF:
-            yield (
-                "typedef",
-                declaration.old_identifier,
-                declaration.new_identifier,
-                ";",
-            )
+            yield "typedef"
+            yield declaration.old_identifier
+            yield declaration.new_identifier
+
+    yield ";"
 
 
-def serialize_using_declaration(
-    declaration: UsingDeclaration,
-) -> Iterable[Iterable[str]]:
+def serialize_using_declaration(declaration: UsingDeclaration) -> Iterable[str]:
+    yield "using"
+
     match declaration.mode:
-        case UsingMode.DEFAULT:
-            yield ("using", declaration.identifier, ";")
-
         case UsingMode.ENUM:
-            yield ("using", "enum", declaration.identifier, ";")
+            yield "enum"
 
         case UsingMode.NAMESPACE:
-            yield ("using", "namespace", declaration.identifier, ";")
+            yield "namespace"
+
+    yield declaration.identifier
+    yield ";"
 
 
 def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
@@ -278,8 +217,10 @@ def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
     for parent in parents:
         if parent.virtual:
             yield "virtual"
+
         if parent.access is not None:
             yield serialize_class_access(parent.access)
+
         yield parent.identifier
 
 
@@ -294,23 +235,25 @@ def serialize_class_access(access: ClassAccess) -> str:
         case ClassAccess.PRIVATE:
             return "private"
 
-        case _:
-            raise TypeError(f"Unexpected type {type(access)}")
-
 
 def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterable[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
     yield "("
+
     for index, argument in enumerate(arguments):
         yield argument.type
+
         if argument.identifier is not None:
             yield argument.identifier
+
         if argument.default is not None:
             yield "="
             yield from serialize_expression(argument.default)
+
         if index < len(arguments) - 1:
             yield ","
+
     yield ")"
 
 
@@ -323,10 +266,12 @@ def serialize_constructor_initializers(
         return
 
     yield ":"
+
     for index, initializer in enumerate(initializers):
         yield initializer.identifier
         yield "("
         yield from serialize_expression(initializer.expression)
         yield ")"
+
         if index < len(initializers) - 1:
             yield ","

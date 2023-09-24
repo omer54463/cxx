@@ -8,7 +8,6 @@ from surgeon.statement.compound_statement import CompountStatement
 from surgeon.statement.declaration_statement import DeclarationStatement
 from surgeon.statement.expression_statement import ExpressionStatement
 from surgeon.statement.iteration_statement.do_while_statement import DoWhileStatement
-from surgeon.statement.iteration_statement.for_range_statement import ForRangeStatement
 from surgeon.statement.iteration_statement.for_statement import ForStatement
 from surgeon.statement.iteration_statement.while_statement import WhileStatement
 from surgeon.statement.jump_statement.break_statement import BreakStatement
@@ -24,6 +23,7 @@ from surgeon.statement.null_statement import NullStatement
 from surgeon.statement.selection_statement.if_statement import IfStatement
 from surgeon.statement.selection_statement.switch_statement import SwitchStatement
 from surgeon.statement.statement import Statement
+from surgeon.tests.unit.flatten_lines import flatten_lines
 from surgeon.tests.unit.mocks.mock_serialize_declaration import FakeDeclaration
 from surgeon.tests.unit.mocks.mock_serialize_expression import FakeExpression
 
@@ -58,7 +58,7 @@ BASIC_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
     (
         DeclarationStatement(FakeDeclaration("declaration")),
         [
-            ["declaration"],
+            ["declaration", ";"],
         ],
     ),
 )
@@ -73,30 +73,6 @@ ITERATION_STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = (
             ["do"],
             ["content", ";"],
             ["while", "(", "condition", ")", ";"],
-        ],
-    ),
-    (
-        ForRangeStatement(
-            initializer=ExpressionStatement(FakeExpression("initializer")),
-            value=FakeDeclaration("value"),
-            range=FakeExpression("range"),
-            content=ExpressionStatement(FakeExpression("content")),
-        ),
-        [
-            ["for", "(", "initializer", ";", "value", ":", "range", ")"],
-            ["content", ";"],
-        ],
-    ),
-    (
-        ForRangeStatement(
-            initializer=None,
-            value=FakeDeclaration("value"),
-            range=FakeExpression("range"),
-            content=ExpressionStatement(FakeExpression("content")),
-        ),
-        [
-            ["for", "(", "value", ":", "range", ")"],
-            ["content", ";"],
         ],
     ),
     (
@@ -294,9 +270,12 @@ STATEMENT_TEST_DATA: Iterable[tuple[Statement, list[list[str]]]] = chain(
 
 
 @pytest.mark.usefixtures("mock_serialize_expression", "mock_serialize_declaration")
-@pytest.mark.parametrize(("statement", "expected"), STATEMENT_TEST_DATA)
-def test_serialize_statement(statement: Statement, expected: list[list[str]]) -> None:
-    statement_lines = serialize_statement(statement)
-    statement_lines_as_lists = [list(line) for line in statement_lines]
+@pytest.mark.parametrize(("statement", "expected_lines"), STATEMENT_TEST_DATA)
+def test_serialize_statement(
+    statement: Statement,
+    expected_lines: list[list[str]],
+) -> None:
+    result = list(serialize_statement(statement))
+    expected = list(flatten_lines(expected_lines))
 
-    assert statement_lines_as_lists == expected
+    assert result == expected
