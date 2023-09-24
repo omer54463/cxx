@@ -86,7 +86,7 @@ def serialize_class_declaration(declaration: ClassDeclaration) -> Iterable[str]:
 
         for declaration_block in declaration.declaration_blocks:
             if declaration_block.access is not None:
-                yield serialize_class_access(declaration_block.access)
+                yield from serialize_class_access(declaration_block.access)
                 yield ":"
 
             for inner_declaration in declaration_block.declarations:
@@ -219,21 +219,21 @@ def serialize_class_parents(parents: list[ClassBase]) -> Iterable[str]:
             yield "virtual"
 
         if parent.access is not None:
-            yield serialize_class_access(parent.access)
+            yield from serialize_class_access(parent.access)
 
         yield parent.identifier
 
 
-def serialize_class_access(access: ClassAccess) -> str:
+def serialize_class_access(access: ClassAccess) -> Iterable[str]:
     match access:
         case ClassAccess.PUBLIC:
-            return "public"
+            yield "public"
 
         case ClassAccess.PROTECTED:
-            return "protected"
+            yield "protected"
 
         case ClassAccess.PRIVATE:
-            return "private"
+            yield "private"
 
 
 def serialize_function_arguments(arguments: list[FunctionArgument]) -> Iterable[str]:

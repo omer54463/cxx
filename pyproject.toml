@@ -15,7 +15,7 @@ exclude = ["build"]
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["A003", "ANN101", "ANN102", "D", "EM", "PT004", "TRY003"]
+ignore = ["A003", "ANN101", "ANN102", "D", "EM", "FBT003", "PT004", "TRY003"]
 
 [tool.ruff.per-file-ignores]
 "test_*.py" = ["S101"]
