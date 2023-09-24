@@ -80,7 +80,7 @@ def serialize_class_declaration(declaration: ClassDeclaration) -> Iterator[str]:
     if isinstance(declaration, ClassDefinition):
         if declaration.final:
             yield "final"
-        yield from serialize_class_parents(declaration.bases)
+        yield from serialize_class_bases(declaration.bases)
 
         yield "{"
 
@@ -209,19 +209,19 @@ def serialize_using_declaration(declaration: UsingDeclaration) -> Iterator[str]:
     yield ";"
 
 
-def serialize_class_parents(parents: list[ClassBase]) -> Iterator[str]:
-    if len(parents) == 0:
+def serialize_class_bases(bases: list[ClassBase]) -> Iterator[str]:
+    if len(bases) == 0:
         return
 
     yield ":"
-    for parent in parents:
-        if parent.virtual:
+    for base in bases:
+        if base.virtual:
             yield "virtual"
 
-        if parent.access is not None:
-            yield from serialize_class_access(parent.access)
+        if base.access is not None:
+            yield from serialize_class_access(base.access)
 
-        yield parent.identifier
+        yield base.identifier
 
 
 def serialize_class_access(access: ClassAccess) -> Iterator[str]:
