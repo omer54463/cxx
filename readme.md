@@ -10,8 +10,10 @@ This is not due to any inherent difficulty - other things were prioritized.
 - For-range loop - `for (auto a : vec) { ... }`
 - Structured binding - `auto [a, b] = ...;`
 - Multiple-variable simple declaration - `int a=5, b=2;`
+- Multiple-type typedef declaration - `typedef int INT, *PINT;`
+- Typedef-specifier for declaration - `typedef struct { ... } S;`
 - Exception handling - `try`, `catch`, `throw`
-- Templates and template specialization - `template <typename T>`
+- Template and template specialization - `template <typename T>`
 
 ## Development Setup
 
