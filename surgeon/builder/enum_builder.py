@@ -1,13 +1,13 @@
 from __future__ import annotations
 
+import typing as t
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
 from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
 from surgeon.declaration.enum_declaration.enum_member import EnumMember
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from surgeon.expression.expression import Expression
 
 

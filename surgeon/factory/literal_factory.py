@@ -1,6 +1,5 @@
+import typing as t
 from enum import Enum, auto
-from typing import Any, overload
-from typing import Literal as Ll
 
 from surgeon.expression.literal.boolean_literal import BooleanLiteral
 from surgeon.expression.literal.character_literal import CharacterLiteral
@@ -20,32 +19,54 @@ class LiteralType(Enum):
 
 
 class LiteralFactory:
-    @overload
-    def create(self, literal_type: Ll[LiteralType.BOOLEAN], *, value: bool) -> Literal:
-        ...
-
-    @overload
-    def create(self, literal_type: Ll[LiteralType.CHARACTER], value: str) -> Literal:
-        ...
-
-    @overload
-    def create(self, literal_type: Ll[LiteralType.IDENTIFIER], value: str) -> Literal:
-        ...
-
-    @overload
-    def create(self, literal_type: Ll[LiteralType.STRING], value: str) -> Literal:
-        ...
-
-    @overload
+    @t.overload
     def create(
         self,
-        literal_type: Ll[LiteralType.INTEGER],
+        literal_type: t.Literal[LiteralType.BOOLEAN],
+        *,
+        value: bool,
+    ) -> Literal:
+        ...
+
+    @t.overload
+    def create(
+        self,
+        literal_type: t.Literal[LiteralType.CHARACTER],
+        value: str,
+    ) -> Literal:
+        ...
+
+    @t.overload
+    def create(
+        self,
+        literal_type: t.Literal[LiteralType.IDENTIFIER],
+        value: str,
+    ) -> Literal:
+        ...
+
+    @t.overload
+    def create(
+        self,
+        literal_type: t.Literal[LiteralType.STRING],
+        value: str,
+    ) -> Literal:
+        ...
+
+    @t.overload
+    def create(
+        self,
+        literal_type: t.Literal[LiteralType.INTEGER],
         value: int,
         base: IntegerBase,
     ) -> Literal:
         ...
 
-    def create(self, literal_type: LiteralType, *args: Any, **kwargs: Any) -> Literal:
+    def create(
+        self,
+        literal_type: LiteralType,
+        *args: t.Any,
+        **kwargs: t.Any,
+    ) -> Literal:
         match literal_type:
             case LiteralType.BOOLEAN:
                 return BooleanLiteral(*args, **kwargs)

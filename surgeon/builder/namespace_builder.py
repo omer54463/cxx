@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import typing as t
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from surgeon.declaration.namespace_declaration.namespace_declaration import (
     NamespaceDeclaration,
@@ -10,7 +10,7 @@ from surgeon.declaration.namespace_declaration.namespace_definition import (
     NamespaceDefinition,
 )
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from surgeon.declaration.declaration import Declaration
 
 

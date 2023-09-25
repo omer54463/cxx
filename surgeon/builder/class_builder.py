@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import typing as t
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -10,7 +10,7 @@ from surgeon.declaration.class_declaration.class_declaration_block import (
 )
 from surgeon.declaration.class_declaration.class_definition import ClassDefinition
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from surgeon.declaration.class_declaration.class_access import ClassAccess
     from surgeon.declaration.declaration import Declaration
 

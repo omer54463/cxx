@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import typing as t
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
 
 from surgeon.declaration.function_declaration.constructor_initializer import (
     ConstructorInitializer,
@@ -14,7 +14,7 @@ from surgeon.declaration.function_declaration.function_definition import (
     FunctionDefinition,
 )
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from surgeon.expression.expression import Expression
     from surgeon.statement.statement import Statement
 
