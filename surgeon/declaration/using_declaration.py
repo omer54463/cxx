@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from surgeon.declaration.declaration import Declaration
-from surgeon.declaration.using_declaration.using_mode import UsingMode
+from surgeon.declaration.using_mode import UsingMode
 
 
 @dataclass

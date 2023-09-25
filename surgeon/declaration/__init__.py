@@ -1,5 +1,5 @@
-from surgeon.declaration.alias_declaration.alias_declaration import AliasDeclaration
-from surgeon.declaration.alias_declaration.alias_mode import AliasMode
+from surgeon.declaration.alias_declaration import AliasDeclaration
+from surgeon.declaration.alias_mode import AliasMode
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -27,8 +27,7 @@ from surgeon.declaration.namespace_declaration.namespace_declaration import (
 from surgeon.declaration.namespace_declaration.namespace_definition import (
     NamespaceDefinition,
 )
-from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
-from surgeon.declaration.simple_declaration.simple_definition import SimpleDefinition
 from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
-from surgeon.declaration.using_declaration.using_declaration import UsingDeclaration
-from surgeon.declaration.using_declaration.using_mode import UsingMode
+from surgeon.declaration.using_declaration import UsingDeclaration
+from surgeon.declaration.using_mode import UsingMode
+from surgeon.declaration.variable_declaration import SimpleDeclaration

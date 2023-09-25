@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from surgeon.declaration.alias_declaration.alias_mode import AliasMode
+from surgeon.declaration.alias_mode import AliasMode
 from surgeon.declaration.declaration import Declaration
 
 

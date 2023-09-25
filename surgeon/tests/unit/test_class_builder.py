@@ -6,7 +6,9 @@ from surgeon.declaration.class_declaration.class_declaration_block import (
     ClassDeclarationBlock,
 )
 from surgeon.declaration.class_declaration.class_definition import ClassDefinition
-from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
+from surgeon.declaration.variable_declaration import (
+    SimpleDeclaration,
+)
 
 
 class TestClassBuilder:
@@ -23,9 +25,9 @@ class TestClassBuilder:
             ClassBuilder("identifier", struct=True, final=True)
             .add_specifier("specifier")
             .add_base("identifier", ClassAccess.PUBLIC, virtual=True)
-            .add_declaration(SimpleDeclaration([], "type", "identifier"))
+            .add_declaration(SimpleDeclaration([], "type", "identifier", None))
             .set_access(ClassAccess.PRIVATE)
-            .add_declaration(SimpleDeclaration([], "type", "identifier"))
+            .add_declaration(SimpleDeclaration([], "type", "identifier", None))
             .build()
         )
         expected_declaration = ClassDeclaration(["specifier"], True, "identifier")
@@ -40,11 +42,11 @@ class TestClassBuilder:
             [
                 ClassDeclarationBlock(
                     None,
-                    [SimpleDeclaration([], "type", "identifier")],
+                    [SimpleDeclaration([], "type", "identifier", None)],
                 ),
                 ClassDeclarationBlock(
                     ClassAccess.PRIVATE,
-                    [SimpleDeclaration([], "type", "identifier")],
+                    [SimpleDeclaration([], "type", "identifier", None)],
                 ),
             ],
         )
