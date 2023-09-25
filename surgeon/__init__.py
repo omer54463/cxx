@@ -15,6 +15,9 @@ from surgeon.api.factory.declarations import Declarations
 from surgeon.api.factory.literals import Literals
 from surgeon.api.factory.operators import Operators
 from surgeon.api.factory.statements import Statements
+from surgeon.declaration.simple_declaration.alias_declaration import AliasMode
+from surgeon.declaration.simple_declaration.using_declaration import UsingMode
+from surgeon.expression.operator.other_operators import CastMode
 
 literals = Literals()
 declarations = Declarations()

@@ -35,3 +35,6 @@ ignore = [
 "test_*.py" = ["S101"]
 "mock_*.py" = ["S101"]
 "__init__.py" = ["F401"]
+
+[tool.setuptools.package-data]
+"surgeon" = ["py.typed"]
