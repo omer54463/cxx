@@ -1,4 +1,4 @@
-from surgeon.builder.namespace_builder import NamespaceBuilder
+from surgeon.api.builder.namespace_builder import NamespaceBuilder
 from surgeon.declaration.namespace_declaration.namespace_declaration import (
     NamespaceDeclaration,
 )

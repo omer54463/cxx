@@ -1,4 +1,4 @@
-from surgeon.builder.class_builder import ClassBuilder
+from surgeon.api.builder.class_builder import ClassBuilder
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration

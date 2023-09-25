@@ -1,4 +1,4 @@
-from surgeon.builder.function_builder import FunctionBuilder
+from surgeon.api.builder.function_builder import FunctionBuilder
 from surgeon.declaration.function_declaration.constructor_initializer import (
     ConstructorInitializer,
 )

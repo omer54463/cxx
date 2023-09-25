@@ -1,4 +1,4 @@
-from surgeon.builder.enum_builder import EnumBuilder
+from surgeon.api.builder.enum_builder import EnumBuilder
 from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
 from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
 from surgeon.declaration.enum_declaration.enum_member import EnumMember
