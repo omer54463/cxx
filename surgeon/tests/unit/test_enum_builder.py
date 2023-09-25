@@ -1,0 +1,33 @@
+from surgeon.builder.enum_builder import EnumBuilder
+from surgeon.declaration.enum_declaration.enum_declaration import EnumDeclaration
+from surgeon.declaration.enum_declaration.enum_definition import EnumDefinition
+from surgeon.declaration.enum_declaration.enum_member import EnumMember
+from surgeon.expression.literal.identifier_literal import IdentifierLiteral
+
+
+class TestEnumBuilder:
+    def test_simple(self) -> None:
+        result = EnumBuilder("identifier").build()
+        expected_declaration = EnumDeclaration([], False, "identifier")
+        expected_definition = EnumDefinition([], False, "identifier", [])
+
+        assert result.declaration == expected_declaration
+        assert result.definition == expected_definition
+
+    def test_complex(self) -> None:
+        result = (
+            EnumBuilder("identifier")
+            .add_specifier("specifier")
+            .add_member("identifier", IdentifierLiteral("value"))
+            .build()
+        )
+        expected_declaration = EnumDeclaration(["specifier"], False, "identifier")
+        expected_definition = EnumDefinition(
+            ["specifier"],
+            False,
+            "identifier",
+            [EnumMember("identifier", IdentifierLiteral("value"))],
+        )
+
+        assert result.declaration == expected_declaration
+        assert result.definition == expected_definition

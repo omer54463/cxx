@@ -77,6 +77,8 @@ class ClassBuilder:
                 self.identifier,
                 self.final,
                 self.bases,
-                [*self.blocks, self.current_block],
+                [*self.blocks, self.current_block]
+                if len(self.current_block.declarations) > 0
+                else self.blocks,
             ),
         )
