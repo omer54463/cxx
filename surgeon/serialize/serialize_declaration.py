@@ -1,7 +1,5 @@
 from collections.abc import Iterator
 
-from surgeon.declaration.alias_declaration import AliasDeclaration
-from surgeon.declaration.alias_mode import AliasMode
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -25,17 +23,20 @@ from surgeon.declaration.namespace_declaration.namespace_declaration import (
 from surgeon.declaration.namespace_declaration.namespace_definition import (
     NamespaceDefinition,
 )
-from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
-from surgeon.declaration.using_declaration import UsingDeclaration
-from surgeon.declaration.using_mode import UsingMode
-from surgeon.declaration.variable_declaration import (
-    SimpleDeclaration,
+from surgeon.declaration.simple_declaration.alias_declaration import AliasDeclaration
+from surgeon.declaration.simple_declaration.alias_mode import AliasMode
+from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
+from surgeon.declaration.simple_declaration.static_assert_declaration import (
+    StaticAssertDeclaration,
+)
+from surgeon.declaration.simple_declaration.using_declaration import UsingDeclaration
+from surgeon.declaration.simple_declaration.using_mode import UsingMode
+from surgeon.declaration.simple_declaration.variable_declaration import (
+    VariableDeclaration,
 )
 
 
 def serialize_declaration(declaration: Declaration) -> Iterator[str]:
-    from surgeon.serialize.serialize_expression import serialize_expression
-
     match declaration:
         case ClassDeclaration():
             yield from serialize_class_declaration(declaration)
@@ -46,26 +47,11 @@ def serialize_declaration(declaration: Declaration) -> Iterator[str]:
         case FunctionDeclaration():
             yield from serialize_function_declaration(declaration)
 
-        case SimpleDeclaration():
-            yield from serialize_simple_declaration(declaration)
-
         case NamespaceDeclaration():
             yield from serialize_namespace_declaration(declaration)
 
-        case AliasDeclaration():
-            yield from serialize_alias_declaration(declaration)
-
-        case UsingDeclaration():
-            yield from serialize_using_declaration(declaration)
-
-        case StaticAssertDeclaration(expression, message):
-            yield "static_assert"
-            yield "("
-            yield from serialize_expression(expression)
-            yield ","
-            yield from serialize_expression(message)
-            yield ")"
-            yield ";"
+        case SimpleDeclaration():
+            yield from serialize_simple_declaration(declaration)
 
 
 def serialize_optional_declaration(declaration: Declaration | None) -> Iterator[str]:
@@ -148,12 +134,53 @@ def serialize_function_declaration(declaration: FunctionDeclaration) -> Iterator
 def serialize_simple_declaration(declaration: SimpleDeclaration) -> Iterator[str]:
     from surgeon.serialize.serialize_expression import serialize_expression
 
-    yield from declaration.specifiers
-    yield declaration.type
-    yield declaration.identifier
-    if declaration.value is not None:
-        yield "="
-        yield from serialize_expression(declaration.value)
+    match declaration:
+        case VariableDeclaration(specifiers, type, identifier, value):
+            yield from specifiers
+            yield type
+            yield identifier
+            if value is not None:
+                yield "="
+                yield from serialize_expression(value)
+
+        case AliasDeclaration(AliasMode.DEFAULT, old_identifier, new_identifier):
+            yield "using"
+            yield new_identifier
+            yield "="
+            yield old_identifier
+
+        case AliasDeclaration(AliasMode.NAMESPACE, old_identifier, new_identifier):
+            yield "namespace"
+            yield new_identifier
+            yield "="
+            yield old_identifier
+
+        case AliasDeclaration(AliasMode.TYPE_DEF, old_identifier, new_identifier):
+            yield "typedef"
+            yield old_identifier
+            yield new_identifier
+
+        case UsingDeclaration(UsingMode.DEFAULT, identifier):
+            yield "using"
+            yield identifier
+
+        case UsingDeclaration(UsingMode.ENUM, identifier):
+            yield "using"
+            yield "enum"
+            yield identifier
+
+        case UsingDeclaration(UsingMode.NAMESPACE, identifier):
+            yield "using"
+            yield "namespace"
+            yield identifier
+
+        case StaticAssertDeclaration(expression, message):
+            yield "static_assert"
+            yield "("
+            yield from serialize_expression(expression)
+            yield ","
+            yield from serialize_expression(message)
+            yield ")"
 
     yield ";"
 
@@ -171,42 +198,6 @@ def serialize_namespace_declaration(declaration: NamespaceDeclaration) -> Iterat
 
     else:
         yield ";"
-
-
-def serialize_alias_declaration(declaration: AliasDeclaration) -> Iterator[str]:
-    match declaration.mode:
-        case AliasMode.DEFAULT:
-            yield "using"
-            yield declaration.new_identifier
-            yield "="
-            yield declaration.old_identifier
-
-        case AliasMode.NAMESPACE:
-            yield "namespace"
-            yield declaration.new_identifier
-            yield "="
-            yield declaration.old_identifier
-
-        case AliasMode.TYPE_DEF:
-            yield "typedef"
-            yield declaration.old_identifier
-            yield declaration.new_identifier
-
-    yield ";"
-
-
-def serialize_using_declaration(declaration: UsingDeclaration) -> Iterator[str]:
-    yield "using"
-
-    match declaration.mode:
-        case UsingMode.ENUM:
-            yield "enum"
-
-        case UsingMode.NAMESPACE:
-            yield "namespace"
-
-    yield declaration.identifier
-    yield ";"
 
 
 def serialize_class_bases(bases: list[ClassBase]) -> Iterator[str]:

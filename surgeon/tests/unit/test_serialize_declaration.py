@@ -3,8 +3,6 @@ from itertools import chain
 
 import pytest
 
-from surgeon.declaration.alias_declaration import AliasDeclaration
-from surgeon.declaration.alias_mode import AliasMode
 from surgeon.declaration.class_declaration.class_access import ClassAccess
 from surgeon.declaration.class_declaration.class_base import ClassBase
 from surgeon.declaration.class_declaration.class_declaration import ClassDeclaration
@@ -32,11 +30,15 @@ from surgeon.declaration.namespace_declaration.namespace_declaration import (
 from surgeon.declaration.namespace_declaration.namespace_definition import (
     NamespaceDefinition,
 )
-from surgeon.declaration.static_assert_declaration import StaticAssertDeclaration
-from surgeon.declaration.using_declaration import UsingDeclaration
-from surgeon.declaration.using_mode import UsingMode
-from surgeon.declaration.variable_declaration import (
-    SimpleDeclaration,
+from surgeon.declaration.simple_declaration.alias_declaration import AliasDeclaration
+from surgeon.declaration.simple_declaration.alias_mode import AliasMode
+from surgeon.declaration.simple_declaration.static_assert_declaration import (
+    StaticAssertDeclaration,
+)
+from surgeon.declaration.simple_declaration.using_declaration import UsingDeclaration
+from surgeon.declaration.simple_declaration.using_mode import UsingMode
+from surgeon.declaration.simple_declaration.variable_declaration import (
+    VariableDeclaration,
 )
 from surgeon.serialize.serialize_declaration import serialize_declaration
 from surgeon.tests.unit.flatten_lines import flatten_lines
@@ -193,7 +195,7 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
                 ClassDeclarationBlock(
                     access=ClassAccess.PUBLIC,
                     declarations=[
-                        SimpleDeclaration(
+                        VariableDeclaration(
                             specifiers=[],
                             type="type",
                             identifier="identifier",
@@ -204,7 +206,7 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
                 ClassDeclarationBlock(
                     access=ClassAccess.PROTECTED,
                     declarations=[
-                        SimpleDeclaration(
+                        VariableDeclaration(
                             specifiers=[],
                             type="type",
                             identifier="identifier",
@@ -215,7 +217,7 @@ CLASS_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
                 ClassDeclarationBlock(
                     access=ClassAccess.PRIVATE,
                     declarations=[
-                        SimpleDeclaration(
+                        VariableDeclaration(
                             specifiers=[],
                             type="type",
                             identifier="identifier",
@@ -361,7 +363,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
 
 SIMPLE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     (
-        SimpleDeclaration(
+        VariableDeclaration(
             specifiers=[],
             type="type",
             identifier="identifier",
@@ -372,7 +374,7 @@ SIMPLE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        SimpleDeclaration(
+        VariableDeclaration(
             specifiers=["specifier"],
             type="type",
             identifier="identifier",
@@ -383,7 +385,7 @@ SIMPLE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        SimpleDeclaration(
+        VariableDeclaration(
             specifiers=[],
             type="type",
             identifier="identifier",
@@ -394,7 +396,7 @@ SIMPLE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
         ],
     ),
     (
-        SimpleDeclaration(
+        VariableDeclaration(
             specifiers=["specifier"],
             type="type",
             identifier="identifier",
@@ -673,7 +675,7 @@ NAMESPACE_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] =
             specificers=[],
             identifier="identifier",
             declarations=[
-                SimpleDeclaration(
+                VariableDeclaration(
                     specifiers=[],
                     type="type",
                     identifier="identifier",

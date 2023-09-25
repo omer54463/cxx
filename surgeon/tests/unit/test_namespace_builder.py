@@ -5,8 +5,8 @@ from surgeon.declaration.namespace_declaration.namespace_declaration import (
 from surgeon.declaration.namespace_declaration.namespace_definition import (
     NamespaceDefinition,
 )
-from surgeon.declaration.variable_declaration import (
-    SimpleDeclaration,
+from surgeon.declaration.simple_declaration.variable_declaration import (
+    VariableDeclaration,
 )
 
 
@@ -23,14 +23,14 @@ class TestNamespaceBuilder:
         result = (
             NamespaceBuilder("identifier")
             .add_specifier("specifier")
-            .add_declaration(SimpleDeclaration([], "type", "identifier", None))
+            .add_declaration(VariableDeclaration([], "type", "identifier", None))
             .build()
         )
         expected_declaration = NamespaceDeclaration(["specifier"], "identifier")
         expected_definition = NamespaceDefinition(
             ["specifier"],
             "identifier",
-            [SimpleDeclaration([], "type", "identifier", None)],
+            [VariableDeclaration([], "type", "identifier", None)],
         )
 
         assert result.declaration == expected_declaration
