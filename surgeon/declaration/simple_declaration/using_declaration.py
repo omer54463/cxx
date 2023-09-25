@@ -1,7 +1,13 @@
 from dataclasses import dataclass
+from enum import Enum, auto
 
 from surgeon.declaration.simple_declaration.simple_declaration import SimpleDeclaration
-from surgeon.declaration.simple_declaration.using_mode import UsingMode
+
+
+class UsingMode(Enum):
+    DEFAULT = auto()
+    ENUM = auto()
+    NAMESPACE = auto()
 
 
 @dataclass

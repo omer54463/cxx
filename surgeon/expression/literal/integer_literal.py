@@ -1,7 +1,14 @@
 from dataclasses import dataclass
+from enum import Enum, auto
 
-from surgeon.expression.literal.integer_base import IntegerBase
 from surgeon.expression.literal.literal import Literal
+
+
+class IntegerBase(Enum):
+    BINARY = auto()
+    OCTAL = auto()
+    DECIMAL = auto()
+    HEXADECIMAL = auto()
 
 
 @dataclass

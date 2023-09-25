@@ -4,14 +4,12 @@ from surgeon.expression.expression import Expression
 from surgeon.expression.literal.boolean_literal import BooleanLiteral
 from surgeon.expression.literal.character_literal import CharacterLiteral
 from surgeon.expression.literal.identifier_literal import IdentifierLiteral
-from surgeon.expression.literal.integer_base import IntegerBase
-from surgeon.expression.literal.integer_literal import IntegerLiteral
+from surgeon.expression.literal.integer_literal import IntegerBase, IntegerLiteral
 from surgeon.expression.literal.literal import Literal
 from surgeon.expression.literal.string_literal import StringLiteral
 from surgeon.expression.operator.access_operators import (
     MemberOperator,
 )
-from surgeon.expression.operator.cast_mode import CastMode
 from surgeon.expression.operator.operator import (
     BinaryOperator,
     Operator,
@@ -19,6 +17,7 @@ from surgeon.expression.operator.operator import (
     UnaryOperator,
 )
 from surgeon.expression.operator.other_operators import (
+    CastMode,
     CastOperator,
     CCastOperator,
     FunctionCallOperator,

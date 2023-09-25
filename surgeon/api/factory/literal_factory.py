@@ -4,8 +4,7 @@ from enum import Enum, auto
 from surgeon.expression.literal.boolean_literal import BooleanLiteral
 from surgeon.expression.literal.character_literal import CharacterLiteral
 from surgeon.expression.literal.identifier_literal import IdentifierLiteral
-from surgeon.expression.literal.integer_base import IntegerBase
-from surgeon.expression.literal.integer_literal import IntegerLiteral
+from surgeon.expression.literal.integer_literal import IntegerBase, IntegerLiteral
 from surgeon.expression.literal.literal import Literal
 from surgeon.expression.literal.string_literal import StringLiteral
 

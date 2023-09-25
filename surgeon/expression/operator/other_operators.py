@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from enum import Enum, auto
 
 from surgeon.expression.expression import Expression
-from surgeon.expression.operator.cast_mode import CastMode
 from surgeon.expression.operator.operator import (
     BinaryOperator,
     Operator,
@@ -29,6 +29,13 @@ class ConditionalOperator(TrinaryOperator):
 class CCastOperator(Operator):
     type: str
     operand: Expression
+
+
+class CastMode(Enum):
+    STATIC = auto()
+    DYNAMIC = auto()
+    CONST = auto()
+    REINTERPRET = auto()
 
 
 @dataclass
