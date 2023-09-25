@@ -25,7 +25,7 @@ class LiteralFactory:
         literal_type: t.Literal[LiteralType.BOOLEAN],
         *,
         value: bool,
-    ) -> Literal:
+    ) -> BooleanLiteral:
         ...
 
     @t.overload
@@ -33,7 +33,7 @@ class LiteralFactory:
         self,
         literal_type: t.Literal[LiteralType.CHARACTER],
         value: str,
-    ) -> Literal:
+    ) -> CharacterLiteral:
         ...
 
     @t.overload
@@ -41,7 +41,7 @@ class LiteralFactory:
         self,
         literal_type: t.Literal[LiteralType.IDENTIFIER],
         value: str,
-    ) -> Literal:
+    ) -> IdentifierLiteral:
         ...
 
     @t.overload
@@ -49,7 +49,7 @@ class LiteralFactory:
         self,
         literal_type: t.Literal[LiteralType.STRING],
         value: str,
-    ) -> Literal:
+    ) -> StringLiteral:
         ...
 
     @t.overload
@@ -58,7 +58,7 @@ class LiteralFactory:
         literal_type: t.Literal[LiteralType.INTEGER],
         value: int,
         base: IntegerBase,
-    ) -> Literal:
+    ) -> IntegerLiteral:
         ...
 
     def create(
