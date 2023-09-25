@@ -7,6 +7,7 @@ A C/C++ source generation package.
 This is a list of language features this package doesn't currently support.
 This is not due to any inherent difficulty - other things were prioritized.
 
+- Initializer list - `int arr[3] = { 0, 1, 2 };`
 - For-range loop - `for (auto a : vec) { ... }`
 - Structured binding - `auto [a, b] = ...;`
 - Multiple-variable simple declaration - `int a=5, b=2;`
@@ -22,7 +23,7 @@ This is not due to any inherent difficulty - other things were prioritized.
 
 Install dev-dependencies and pre-commit hook.
 
-```
+```cmd
 pip3 install -e .[dev]
 pre-commit install
 ```

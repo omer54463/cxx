@@ -270,7 +270,8 @@ def serialize_constructor_initializers(
     for index, initializer in enumerate(initializers):
         yield initializer.identifier
         yield "("
-        yield from serialize_expression(initializer.expression)
+        if initializer.value is not None:
+            yield from serialize_expression(initializer.value)
         yield ")"
 
         if index < len(initializers) - 1:
