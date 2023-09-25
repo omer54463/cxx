@@ -40,6 +40,6 @@ class CastMode(Enum):
 
 @dataclass
 class CastOperator(Operator):
+    mode: CastMode
     type: str
     operand: Expression
-    mode: CastMode

@@ -23,7 +23,7 @@ class EnumBuilder:
     specifiers: list[str]
     members: list[EnumMember]
 
-    def __init__(self, identifier: str, *, scoped: bool = False) -> None:
+    def __init__(self, identifier: str, scoped: bool = False) -> None:
         self.identifier = identifier
         self.scoped = scoped
         self.specifiers = []
