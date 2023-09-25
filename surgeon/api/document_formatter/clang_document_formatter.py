@@ -35,7 +35,7 @@ class ClangDocumentFormatter(DocumentFormatter):
             with temporary_file_path.open("w") as temporary_file:
                 temporary_file.write(minified)
 
-            arguments = [str(self.executable_path), temporary_file.name]
+            arguments = [str(self.executable_path), str(temporary_file_path.absolute())]
             result_bytes = check_output(arguments)
 
         return result_bytes.decode()
