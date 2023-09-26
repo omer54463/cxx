@@ -4,16 +4,16 @@ from tempfile import TemporaryDirectory
 
 from surgeon.api.document.document import Document
 from surgeon.api.document_formatter.document_formatter import DocumentFormatter
-from surgeon.api.document_formatter.minified_document_formatter import (
-    MinifiedDocumentFormatter,
+from surgeon.api.document_formatter.minified_formatter import (
+    MinifiedFormatter,
 )
 
 
-class ClangDocumentFormatter(DocumentFormatter):
+class ClangFormatter(DocumentFormatter):
     executable_path: Path
     configuration_path: Path | None
     configuration_style: str | None
-    minified_formatter: MinifiedDocumentFormatter
+    underlying_formatter: DocumentFormatter
 
     def __init__(
         self,
@@ -24,7 +24,7 @@ class ClangDocumentFormatter(DocumentFormatter):
         self.executable_path = executable_path
         self.configuration_path = configuration_path
         self.configuration_style = configuration_style
-        self.minified_formatter = MinifiedDocumentFormatter()
+        self.underlying_formatter = MinifiedFormatter()
 
     def format(self, document: Document) -> str:
         with TemporaryDirectory() as temporary_directory:
@@ -58,7 +58,7 @@ class ClangDocumentFormatter(DocumentFormatter):
     def _setup_source(self, temporary_directory_path: Path, document: Document) -> Path:
         temporary_file_path = temporary_directory_path / "source"
 
-        minified = self.minified_formatter.format(document)
+        minified = self.underlying_formatter.format(document)
         with temporary_file_path.open("w") as temporary_file:
             temporary_file.write(minified)
 

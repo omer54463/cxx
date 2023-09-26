@@ -4,12 +4,12 @@ from surgeon.api.builder.function_builder import Function, FunctionBuilder
 from surgeon.api.builder.namespace_builder import Namespace, NamespaceBuilder
 from surgeon.api.document.document import Document
 from surgeon.api.document.document_builder import DocumentBuilder
-from surgeon.api.document_formatter.clang_document_formatter import (
-    ClangDocumentFormatter,
+from surgeon.api.document_formatter.clang_formatter import (
+    ClangFormatter,
 )
 from surgeon.api.document_formatter.document_formatter import DocumentFormatter
-from surgeon.api.document_formatter.minified_document_formatter import (
-    MinifiedDocumentFormatter,
+from surgeon.api.document_formatter.minified_formatter import (
+    MinifiedFormatter,
 )
 from surgeon.api.factory.declarations import Declarations
 from surgeon.api.factory.literals import Literals

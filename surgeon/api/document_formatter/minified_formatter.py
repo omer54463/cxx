@@ -3,7 +3,7 @@ from surgeon.api.document_formatter.document_formatter import DocumentFormatter
 from surgeon.serialize.serialize_declaration import serialize_declaration
 
 
-class MinifiedDocumentFormatter(DocumentFormatter):
+class MinifiedFormatter(DocumentFormatter):
     def format(self, document: Document) -> str:
         lines: list[str] = []
 
