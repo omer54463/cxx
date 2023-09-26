@@ -51,7 +51,7 @@ from surgeon.expression.operator.increment_decrement_operators import (
     PreDecrementOperator,
     PreIncrementOperator,
 )
-from surgeon.expression.operator.logical_operators import (
+from surgeon.expression.operator.logic_operators import (
     AndOperator,
     NotOperator,
     OrOperator,

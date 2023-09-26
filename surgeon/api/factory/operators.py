@@ -49,7 +49,7 @@ from surgeon.expression.operator.increment_decrement_operators import (
     PreDecrementOperator,
     PreIncrementOperator,
 )
-from surgeon.expression.operator.logical_operators import (
+from surgeon.expression.operator.logic_operators import (
     AndOperator,
     NotOperator,
     OrOperator,
@@ -247,7 +247,7 @@ class IncrementDecrementOperators:
         return PostDecrementOperator(operand)
 
 
-class LogicalOperators:
+class LogicOperators:
     def not_(self, operand: Expression) -> NotOperator:
         return NotOperator(operand)
 
@@ -290,7 +290,8 @@ class Operators:
     assignment: AssignmentOperators
     comparison: ComparisonOperators
     inc_dec: IncrementDecrementOperators
-    logic: LogicalOperators
+    logic: LogicOperators
+    other: OtherOperatorFactory
 
     def __init__(self) -> None:
         self.access = AccessOperators()
@@ -298,4 +299,5 @@ class Operators:
         self.assignment = AssignmentOperators()
         self.comparison = ComparisonOperators()
         self.inc_dec = IncrementDecrementOperators()
-        self.logic = LogicalOperators()
+        self.logic = LogicOperators()
+        self.other = OtherOperatorFactory()

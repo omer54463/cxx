@@ -59,7 +59,7 @@ from surgeon.expression.operator.increment_decrement_operators import (
     PreDecrementOperator,
     PreIncrementOperator,
 )
-from surgeon.expression.operator.logical_operators import (
+from surgeon.expression.operator.logic_operators import (
     AndOperator,
     NotOperator,
     OrOperator,
@@ -378,7 +378,7 @@ INCREMENT_DECREMENT_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] =
     ),
 )
 
-LOGICAL_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
+LOGIC_OPERATOR_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
     (
         NotOperator(
             operand=IdentifierLiteral("identifier"),
@@ -523,7 +523,7 @@ EXPRESSION_TEST_DATA: Iterable[tuple[Expression, list[str]]] = chain(
     ASSIGNMENT_OPERATOR_TEST_DATA,
     COMPARISON_OPERATOR_TEST_DATA,
     INCREMENT_DECREMENT_OPERATOR_TEST_DATA,
-    LOGICAL_OPERATOR_TEST_DATA,
+    LOGIC_OPERATOR_TEST_DATA,
     OTHER_OPERATOR_TEST_DATA,
     PRECEDENCE_TEST_DATA,
 )
