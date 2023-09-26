@@ -51,8 +51,8 @@ class ClangFormatter(DocumentFormatter):
                 "-dump-config",
             ]
             configuration = check_output(arguments).decode()
-            configuration_path.write_text(configuration, encoding="ascii")
 
+        configuration_path.write_text(configuration, encoding="ascii")
         return temporary_directory_path
 
     def _setup_source(self, temporary_directory_path: Path, document: Document) -> Path:
