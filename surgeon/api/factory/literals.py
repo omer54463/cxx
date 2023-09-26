@@ -15,7 +15,11 @@ class Literals:
     def identifier(self, identifier: str) -> IdentifierLiteral:
         return IdentifierLiteral(identifier)
 
-    def integer(self, value: int, base: IntegerBase) -> IntegerLiteral:
+    def integer(
+        self,
+        value: int,
+        base: IntegerBase = IntegerBase.DECIMAL,
+    ) -> IntegerLiteral:
         return IntegerLiteral(value, base)
 
     def string(self, value: str) -> StringLiteral:
