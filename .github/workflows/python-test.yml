@@ -2,8 +2,9 @@ name: Test Python Package
 
 on:
   push:
+    branches:
+      - '**'
   pull_request:
-  workflow_call:
 
 jobs:
   test:
