@@ -37,7 +37,7 @@ jobs:
           name: Release ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           body_path: readme.md
-          files: dist
+          files: dist/*
 
       - name: Upload artifacts
         id: upload_artifacts
