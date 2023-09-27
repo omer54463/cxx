@@ -4,18 +4,18 @@ repos:
       - id: mypy
         name: mypy
         language: system
-        entry: poetry run mypy
+        entry: mypy
         types: [python]
         require_serial: true
       - id: black
         name: black
         language: system
-        entry: poetry run black --check
+        entry: black --check
         types: [python]
         require_serial: true
       - id: ruff
         name: ruff
         language: system
-        entry: poetry run ruff
+        entry: ruff
         types: [python]
         require_serial: true

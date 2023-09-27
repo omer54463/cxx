@@ -27,7 +27,7 @@ jobs:
 
       - name: Run pre-commit hook
         id: run_pre_commit_hook
-        run: pre-commit run --all-files
+        run: poetry run pre-commit run --all-files
 
       - name: Run pytest
         id: run_pytest
