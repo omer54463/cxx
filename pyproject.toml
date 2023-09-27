@@ -5,6 +5,11 @@ readme = "readme.md"
 description = "A C/C++ source generation package."
 authors = ["Omer Lubin <omer.lubin.1337@gmail.com>"]
 
+[tool.poetry.urls]
+download = "https://pypi.org/project/cxx/#files"
+source = "https://github.com/omer54463/cxx"
+tracker = "https://github.com/omer54463/cxx/issues"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 
