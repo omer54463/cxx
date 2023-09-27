@@ -20,11 +20,16 @@ class ClangFormatter(DocumentFormatter):
         executable_path: Path = Path("clang-format"),
         configuration_path: Path | None = None,
         configuration_style: str | None = None,
+        underlying_formatter: DocumentFormatter | None = None,
     ) -> None:
         self.executable_path = executable_path
         self.configuration_path = configuration_path
         self.configuration_style = configuration_style
-        self.underlying_formatter = MinifiedFormatter()
+        self.underlying_formatter = (
+            MinifiedFormatter(line_breaks=True)
+            if underlying_formatter is None
+            else underlying_formatter
+        )
 
     def format(self, document: Document) -> str:
         with TemporaryDirectory() as temporary_directory:
