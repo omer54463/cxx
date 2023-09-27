@@ -1,16 +1,21 @@
 repos:
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.5.1"
+  - repo: local
     hooks:
       - id: mypy
-
-  - repo: https://github.com/psf/black
-    rev: "23.9.1"
-    hooks:
+        name: mypy
+        language: system
+        entry: poetry run mypy
+        types: [python]
+        require_serial: true
       - id: black
-        args: ["--check"]
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.291
-    hooks:
+        name: black
+        language: system
+        entry: poetry run black --check
+        types: [python]
+        require_serial: true
       - id: ruff
+        name: ruff
+        language: system
+        entry: poetry run ruff
+        types: [python]
+        require_serial: true
