@@ -116,11 +116,16 @@ This is not due to any inherent difficulty - other things were prioritized.
 
 ## Development Setup
 
-Install and configure poetry, dev-dependencies and pre-commit hook:
+Install and configure poetry:
 
 ```txt
 pip3 install poetry
 poetry config virtualenvs.in-project true
+```
+
+Install development dependencies and pre-commit hook
+
+```txt
 poetry install --with dev
 pre-commit install
 ```
