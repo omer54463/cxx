@@ -1,0 +1,47 @@
+name: Publish Python Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        id: checkout_repository
+        uses: actions/checkout@v4
+
+      - name: Install python
+        id: install_python
+        uses: actions/setup-python@v4
+        with: { python-version: "3.11" }
+
+      - name: Install poetry
+        id: install_poetry
+        run: pip3 install poetry
+
+      - name: Update package version
+        id: update_package_version
+        run: poetry version ${{ github.ref_name }}
+
+      - name: Build package
+        id: build_package
+        run: poetry build
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          body_path: readme.md
+          files: dist
+
+      - name: Upload artifacts
+        id: upload_artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cxx-dist
+          path: dist
