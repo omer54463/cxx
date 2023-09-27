@@ -14,19 +14,20 @@ class MinifiedFormatter(DocumentFormatter):
 
         if document.pragma_once:
             lines.append("#pragma once")
+            self._add_line_break(lines)
 
         for include in document.includes:
             open_bracket = "<" if include.system else '"'
             close_bracket = ">" if include.system else '"'
             lines.append(f"#include {open_bracket}{include.path}{close_bracket}")
-
-        if self.line_breaks:
-            lines.append("")
+        self._add_line_break(lines)
 
         for declaration in document.declarations:
-            if self.line_breaks:
-                lines.append("")
-
             lines.append(" ".join(serialize_declaration(declaration)))
+            self._add_line_break(lines)
 
         return "\n".join(lines)
+
+    def _add_line_break(self, lines: list[str]) -> None:
+        if self.line_breaks:
+            lines.append("")
