@@ -35,7 +35,7 @@ jobs:
 
       - name: Publish package
         id: publish_package
-        run: poetry publish
+        run: poetry publish --username __token__ --password ${{ secrets.PYPI_API_TOKEN }} 
 
       - name: Create release
         id: create_release
