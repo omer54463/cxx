@@ -1,4 +1,4 @@
-# Surgeon
+# Cxx
 
 A C/C++ source generation package.
 
@@ -19,28 +19,28 @@ The general usage flow is:
 ### Simple Example
 
 ```python
-import surgeon as sg
+import cxx
 
 even_odd_enum = (
-    sg.EnumBuilder("EvenOdd", scoped=True)
+    cxx.EnumBuilder("EvenOdd", scoped=True)
     .add_member("Even")
     .add_member("Odd")
     .build()
 )
 
 get_even_odd_function = (
-    sg.FunctionBuilder("GetEvenOdd", "EvenOdd")
+    cxx.FunctionBuilder("GetEvenOdd", "EvenOdd")
     .add_specifier("inline")
-    .add_argument("int", "value", sg.literals.integer(0))
+    .add_argument("int", "value", cxx.literals.integer(0))
     .add_statement(
-        sg.statements.return_(
-            sg.operators.other.conditional(
-                sg.operators.arithmetic.remainder(
-                    sg.literals.identifier("value"),
-                    sg.literals.integer(2),
+        cxx.statements.return_(
+            cxx.operators.other.conditional(
+                cxx.operators.arithmetic.remainder(
+                    cxx.literals.identifier("value"),
+                    cxx.literals.integer(2),
                 ),
-                sg.literals.identifier("EvenOdd::Odd"),
-                sg.literals.identifier("EvenOdd::Even"),
+                cxx.literals.identifier("EvenOdd::Odd"),
+                cxx.literals.identifier("EvenOdd::Even"),
             )
         )
     )
@@ -48,12 +48,12 @@ get_even_odd_function = (
 )
 
 document = (
-    sg.DocumentBuilder(pragma_once=True)
+    cxx.DocumentBuilder(pragma_once=True)
     .add_declaration(even_odd_enum.definition)
     .add_declaration(get_even_odd_function.definition)
     .build()
 )
-formatter = sg.ClangFormatter(configuration_style="google")
+formatter = cxx.ClangFormatter(configuration_style="google")
 print(formatter.format(document))
 ```
 
@@ -74,13 +74,13 @@ inline EvenOdd GetEvenOdd(int value = 0) {
 
 ### "Factory" API
 
-The "factory" API allows you to create any `Surgeon` element:
+The "factory" API allows you to create any element:
 
-- `sg.document(...) -> Document`
-- `sg.declarations.[specific declaration type](...) -> Declaration`
-- `sg.literals.[specific literal type](...) -> Literal`
-- `sg.operators.[specific operator type](...) -> Operator`
-- `sg.statements.[specific statement type](...) -> Statement`
+- `cxx.document(...) -> Document`
+- `cxx.declarations.[specific declaration type](...) -> Declaration`
+- `cxx.literals.[specific literal type](...) -> Literal`
+- `cxx.operators.[specific operator type](...) -> Operator`
+- `cxx.statements.[specific statement type](...) -> Statement`
 
 Some elements are awkward to create this way - such as functions, which contain arguments, internal statements, specifiers, and so on. For those elements, you should use a builder.
 
@@ -88,14 +88,14 @@ Some elements are awkward to create this way - such as functions, which contain 
 
 There are several builders:
 
-- `sg.ClassBuilder`
-- `sg.EnumBuilder`
-- `sg.FunctionBuilder`
-- `sg.NamespaceBuilder`
-- `sg.DocumentBuilder`
-- `sg.CompoundStatementBuilder`
-- `sg.FunctionCallOperatorBuilder`
-- `sg.VariableDeclarationBuilder`
+- `cxx.ClassBuilder`
+- `cxx.EnumBuilder`
+- `cxx.FunctionBuilder`
+- `cxx.NamespaceBuilder`
+- `cxx.DocumentBuilder`
+- `cxx.CompoundStatementBuilder`
+- `cxx.FunctionCallOperatorBuilder`
+- `cxx.VariableDeclarationBuilder`
 
 ## Current Unsupported Features
 

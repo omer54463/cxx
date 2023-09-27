@@ -1,5 +1,5 @@
 [project]
-name = "surgeon"
+name = "cxx"
 description = "A C/C++ source generation package."
 version = "0.1.0"
 requires-python = ">=3.11.0"
@@ -37,4 +37,4 @@ ignore = [
 "__init__.py" = ["F401"]
 
 [tool.setuptools.package-data]
-"surgeon" = ["py.typed"]
+"cxx" = ["py.typed"]
