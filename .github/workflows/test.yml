@@ -3,7 +3,7 @@ name: Test Python Package
 on:
   push:
     branches:
-      - "nothing" # "*"
+      - "*"
   pull_request:
 
 jobs:

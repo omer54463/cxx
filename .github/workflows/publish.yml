@@ -33,6 +33,10 @@ jobs:
         id: build_package
         run: poetry build
 
+      - name: Publish package
+        id: publish_package
+        run: poetry publish
+
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v1
