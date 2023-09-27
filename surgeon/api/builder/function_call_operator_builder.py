@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from surgeon.expression.expression import Expression
 
 
-class FunctionCallOperatorFactory:
+class FunctionCallOperatorBuilder:
     operand: Expression
     arguments: list[Expression]
 
@@ -16,7 +16,7 @@ class FunctionCallOperatorFactory:
         self.operand = operand
         self.arguments = []
 
-    def add_argument(self, argument: Expression) -> FunctionCallOperatorFactory:
+    def add_argument(self, argument: Expression) -> FunctionCallOperatorBuilder:
         self.arguments.append(argument)
         return self
 

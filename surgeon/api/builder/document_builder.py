@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from surgeon.api.document.document import Document
-from surgeon.api.document.document_include import DocumentInclude
+from surgeon.document.document import Document
+from surgeon.document.document_include import DocumentInclude
 
 if TYPE_CHECKING:
     from surgeon.declaration.declaration import Declaration

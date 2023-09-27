@@ -2,9 +2,9 @@ from pathlib import Path
 from subprocess import check_output
 from tempfile import TemporaryDirectory
 
-from surgeon.api.document.document import Document
-from surgeon.api.document_formatter.document_formatter import DocumentFormatter
-from surgeon.api.document_formatter.minified_formatter import (
+from surgeon.document.document import Document
+from surgeon.document_formatter.document_formatter import DocumentFormatter
+from surgeon.document_formatter.minified_formatter import (
     MinifiedFormatter,
 )
 

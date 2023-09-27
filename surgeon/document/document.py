@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from surgeon.api.document.document_include import DocumentInclude
 from surgeon.declaration.declaration import Declaration
+from surgeon.document.document_include import DocumentInclude
 
 
 @dataclass

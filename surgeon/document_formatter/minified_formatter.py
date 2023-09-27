@@ -1,5 +1,5 @@
-from surgeon.api.document.document import Document
-from surgeon.api.document_formatter.document_formatter import DocumentFormatter
+from surgeon.document.document import Document
+from surgeon.document_formatter.document_formatter import DocumentFormatter
 from surgeon.serialize.serialize_declaration import serialize_declaration
 
 

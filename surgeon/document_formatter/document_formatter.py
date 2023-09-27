@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from surgeon.api.document.document import Document
+from surgeon.document.document import Document
 
 
 class DocumentFormatter(ABC):
