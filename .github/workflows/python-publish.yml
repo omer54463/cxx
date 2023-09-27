@@ -52,31 +52,43 @@ jobs:
           name: package-artifacts
           path: dist/
 
-  release:
-    runs-on: ubunute-latest
-    needs: build
-    steps:
-      - name: Download package artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: package-artifacts
-
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Release ${{  github.ref_name }}
-          artifacts: dist/
-          bodyFile: readme.md
-
-  deploy:
+  dirlist:
     runs-on: ubuntu-latest
     needs: build
-    permissions: { id-token: write }
     steps:
       - name: Download package artifacts
         uses: actions/download-artifact@v3
         with:
           name: package-artifacts
 
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Get dirlist
+        uses: ls -la
+
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Download package artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: package-artifacts
+
+  #     - name: Create release
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         name: Release ${{  github.ref_name }}
+  #         artifacts: dist/
+  #         bodyFile: readme.md
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   permissions: { id-token: write }
+  #   steps:
+  #     - name: Download package artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: package-artifacts
+
+  #     - name: Publish package
+  #       uses: pypa/gh-action-pypi-publish@release/v1
