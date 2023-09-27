@@ -1,17 +1,28 @@
-[project]
+[tool.poetry]
 name = "cxx"
+version = "0.0.0-dev"
+readme = "readme.md"
 description = "A C/C++ source generation package."
-version = "0.1.0"
-requires-python = ">=3.11.0"
-authors = [{ name = "Omer Lubin", email = "omer.lubin.1337@gmail.com" }]
+authors = ["Omer Lubin <omer.lubin.1337@gmail.com>"]
 
-[project.optional-dependencies]
-dev = ["pre-commit", "black", "ruff", "mypy", "pytest", "pytest-mock"]
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.4.0"
+black = "^23.9.1"
+ruff = "^0.0.291"
+mypy = "^1.5.1"
+pytest = "^7.4.2"
+pytest-mock = "^3.11.1"
 
 [tool.mypy]
 strict = true
 pretty = true
-exclude = ["build"]
+exclude = ["venv", "build"]
 
 [tool.ruff]
 select = ["ALL"]
@@ -22,6 +33,7 @@ ignore = [
     "ANN102",
     "D",
     "EM",
+    "FA102",
     "FBT",
     "PERF401",
     "PLR0913",
@@ -36,5 +48,6 @@ ignore = [
 "mock_*.py" = ["S101"]
 "__init__.py" = ["F401"]
 
-[tool.setuptools.package-data]
-"cxx" = ["py.typed"]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

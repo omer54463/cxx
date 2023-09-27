@@ -116,9 +116,17 @@ This is not due to any inherent difficulty - other things were prioritized.
 
 ## Development Setup
 
-Install dev-dependencies and pre-commit hook.
+Install and configure poetry, dev-dependencies and pre-commit hook:
 
-```cmd
-pip3 install -e .[dev]
+```txt
+pip3 install poetry
+poetry config virtualenvs.in-project true
+poetry install --with dev
 pre-commit install
+```
+
+Run the tests:
+
+```txt
+poetry run pytest
 ```
