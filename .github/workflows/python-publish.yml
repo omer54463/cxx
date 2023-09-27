@@ -62,7 +62,7 @@ jobs:
           name: package-artifacts
 
       - name: Get dirlist
-        uses: ls -la
+        run: ls -la
 
   # release:
   #   runs-on: ubuntu-latest
