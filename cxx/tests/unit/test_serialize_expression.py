@@ -82,8 +82,10 @@ LITERAL_TEST_DATA: Iterable[tuple[Expression, list[str]]] = (
     (IntegerLiteral(0o707070, IntegerBase.OCTAL), ["0o707070"]),
     (IntegerLiteral(909090, IntegerBase.DECIMAL), ["909090"]),
     (IntegerLiteral(0xF0F0F0, IntegerBase.HEXADECIMAL), ["0xF0F0F0"]),
-    (StringLiteral("string"), ['"string"']),
-    (StringLiteral("string\nstring"), ['"""string\nstring"""']),
+    (StringLiteral("string", False), ['"string"']),
+    (StringLiteral("string\nstring", False), ['"""string\nstring"""']),
+    (StringLiteral("string", True), ['L"string"']),
+    (StringLiteral("string\nstring", True), ['L"""string\nstring"""']),
     (CharacterLiteral("c"), ["'c'"]),
 )
 

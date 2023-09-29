@@ -22,5 +22,5 @@ class Literals:
     ) -> IntegerLiteral:
         return IntegerLiteral(value, base)
 
-    def string(self, value: str) -> StringLiteral:
-        return StringLiteral(value)
+    def string(self, value: str, wide: bool = False) -> StringLiteral:
+        return StringLiteral(value, wide)
