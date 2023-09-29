@@ -26,7 +26,7 @@ class ClangFormatter(DocumentFormatter):
         self.configuration_path = configuration_path
         self.configuration_style = configuration_style
         self.underlying_formatter = (
-            MinifiedFormatter(line_breaks=True)
+            MinifiedFormatter()
             if underlying_formatter is None
             else underlying_formatter
         )
