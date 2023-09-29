@@ -40,3 +40,28 @@ from cxx.declaration.simple_declaration.using_declaration import (
 from cxx.declaration.simple_declaration.variable_declaration import (
     VariableDeclaration,
 )
+
+__all__: list[str] = [
+    "ClassAccess",
+    "ClassBase",
+    "ClassDeclaration",
+    "ClassDeclarationBlock",
+    "ClassDefinition",
+    "Declaration",
+    "EnumDeclaration",
+    "EnumDefinition",
+    "EnumMember",
+    "ConstructorInitializer",
+    "FunctionArgument",
+    "FunctionDeclaration",
+    "FunctionDefinition",
+    "NamespaceDeclaration",
+    "NamespaceDefinition",
+    "AliasDeclaration",
+    "AliasMode",
+    "SimpleDeclaration",
+    "StaticAssertDeclaration",
+    "UsingDeclaration",
+    "UsingMode",
+    "VariableDeclaration",
+]
