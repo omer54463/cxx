@@ -9,7 +9,7 @@ from cxx.api.builder.function_call_operator_builder import (
 from cxx.api.builder.namespace_builder import Namespace, NamespaceBuilder
 from cxx.api.builder.variable_declaration_builder import VariableDeclarationBuilder
 from cxx.api.factory.declarations import Declarations
-from cxx.api.factory.documents import document
+from cxx.api.factory.documents import Documents
 from cxx.api.factory.literals import Literals
 from cxx.api.factory.operators import Operators
 from cxx.api.factory.statements import Statements
@@ -21,6 +21,7 @@ from cxx.document_formatter.minified_formatter import MinifiedFormatter
 from cxx.expression.literal.integer_literal import IntegerBase
 from cxx.expression.operator.other_operators import CastMode
 
+documents = Documents()
 literals = Literals()
 declarations = Declarations()
 operators = Operators()
@@ -40,7 +41,7 @@ __all__: list[str] = [
     "NamespaceBuilder",
     "VariableDeclarationBuilder",
     "Declarations",
-    "document",
+    "Documents",
     "Literals",
     "Operators",
     "Statements",
