@@ -11,7 +11,11 @@ class MinifiedFormatter(DocumentFormatter):
             lines.append("#pragma once")
 
         for include in document.includes:
-            if not include.startswith("<") and not include.endswith(">"):
+            if (include.startswith("<") and include.endswith(">")) or (
+                include.startswith('"') and include.endswith('"')
+            ):
+                actual_include = include
+            else:
                 actual_include = f'"{include}"'
             lines.append(f"#include {actual_include}")
 
