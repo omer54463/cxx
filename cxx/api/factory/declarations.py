@@ -79,18 +79,21 @@ class EnumDeclarations:
         self,
         scoped: bool,
         identifier: str,
+        underlying_type: str | None = None,
         specifiers: list[str] | None = None,
     ) -> EnumDeclaration:
         return EnumDeclaration(
             [] if specifiers is None else specifiers,
             scoped,
             identifier,
+            underlying_type,
         )
 
     def definition(
         self,
         scoped: bool,
         identifier: str,
+        underlying_type: str | None = None,
         specifiers: list[str] | None = None,
         members: list[EnumMember] | None = None,
     ) -> EnumDefinition:
@@ -98,6 +101,7 @@ class EnumDeclarations:
             [] if specifiers is None else specifiers,
             scoped,
             identifier,
+            underlying_type,
             [] if members is None else members,
         )
 

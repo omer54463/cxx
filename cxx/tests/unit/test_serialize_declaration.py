@@ -251,6 +251,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=[],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
         ),
         [
             ["enum", "identifier", ";"],
@@ -258,9 +259,21 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
     (
         EnumDeclaration(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            underlying_type="type",
+        ),
+        [
+            ["enum", "identifier", ":", "type", ";"],
+        ],
+    ),
+    (
+        EnumDeclaration(
             specifiers=["specifier"],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
         ),
         [
             ["specifier", "enum", "identifier", ";"],
@@ -271,6 +284,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=["specifier"],
             scoped=True,
             identifier="identifier",
+            underlying_type=None,
         ),
         [
             ["specifier", "enum", "class", "identifier", ";"],
@@ -281,6 +295,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=[],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
             members=[],
         ),
         [
@@ -291,9 +306,24 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
     ),
     (
         EnumDefinition(
+            specifiers=[],
+            scoped=False,
+            identifier="identifier",
+            underlying_type="type",
+            members=[],
+        ),
+        [
+            ["enum", "identifier", ":", "type"],
+            ["{"],
+            ["}", ";"],
+        ],
+    ),
+    (
+        EnumDefinition(
             specifiers=["specifier"],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
             members=[],
         ),
         [
@@ -307,6 +337,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=["specifier"],
             scoped=True,
             identifier="identifier",
+            underlying_type=None,
             members=[],
         ),
         [
@@ -320,6 +351,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=[],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
             members=[EnumMember(identifier="member", value=None)],
         ),
         [
@@ -334,6 +366,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=[],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
             members=[
                 EnumMember(identifier="member_1", value=None),
                 EnumMember(identifier="member_2", value=None),
@@ -352,6 +385,7 @@ ENUM_DECLARATION_TEST_DATA: Iterable[tuple[Declaration, list[list[str]]]] = (
             specifiers=[],
             scoped=False,
             identifier="identifier",
+            underlying_type=None,
             members=[
                 EnumMember(identifier="member", value=FakeExpression("expression")),
             ],

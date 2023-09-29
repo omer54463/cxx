@@ -8,3 +8,4 @@ class EnumDeclaration(Declaration):
     specifiers: list[str]
     scoped: bool
     identifier: str
+    underlying_type: str | None

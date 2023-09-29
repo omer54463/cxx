@@ -8,8 +8,8 @@ from cxx.expression.literal.identifier_literal import IdentifierLiteral
 class TestEnumBuilder:
     def test_simple(self) -> None:
         result = EnumBuilder("identifier").build()
-        expected_declaration = EnumDeclaration([], False, "identifier")
-        expected_definition = EnumDefinition([], False, "identifier", [])
+        expected_declaration = EnumDeclaration([], False, "identifier", None)
+        expected_definition = EnumDefinition([], False, "identifier", None, [])
 
         assert result.declaration == expected_declaration
         assert result.definition == expected_definition
@@ -21,11 +21,12 @@ class TestEnumBuilder:
             .add_member("identifier", IdentifierLiteral("value"))
             .build()
         )
-        expected_declaration = EnumDeclaration(["specifier"], False, "identifier")
+        expected_declaration = EnumDeclaration(["specifier"], False, "identifier", None)
         expected_definition = EnumDefinition(
             ["specifier"],
             False,
             "identifier",
+            None,
             [EnumMember("identifier", IdentifierLiteral("value"))],
         )
 

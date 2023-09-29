@@ -20,12 +20,19 @@ class Enum:
 class EnumBuilder:
     identifier: str
     scoped: bool
+    underlying_type: str | None
     specifiers: list[str]
     members: list[EnumMember]
 
-    def __init__(self, identifier: str, scoped: bool = False) -> None:
+    def __init__(
+        self,
+        identifier: str,
+        scoped: bool = False,
+        underlying_type: str | None = None,
+    ) -> None:
         self.identifier = identifier
         self.scoped = scoped
+        self.underlying_type = underlying_type
         self.specifiers = []
         self.members = []
 
@@ -43,6 +50,17 @@ class EnumBuilder:
 
     def build(self) -> Enum:
         return Enum(
-            EnumDeclaration(self.specifiers, self.scoped, self.identifier),
-            EnumDefinition(self.specifiers, self.scoped, self.identifier, self.members),
+            EnumDeclaration(
+                self.specifiers,
+                self.scoped,
+                self.identifier,
+                self.underlying_type,
+            ),
+            EnumDefinition(
+                self.specifiers,
+                self.scoped,
+                self.identifier,
+                self.underlying_type,
+                self.members,
+            ),
         )

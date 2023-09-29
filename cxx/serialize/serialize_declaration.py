@@ -97,6 +97,10 @@ def serialize_enum_declaration(declaration: EnumDeclaration) -> Iterator[str]:
         yield "class"
     yield declaration.identifier
 
+    if declaration.underlying_type is not None:
+        yield ":"
+        yield declaration.underlying_type
+
     if isinstance(declaration, EnumDefinition):
         yield "{"
 
