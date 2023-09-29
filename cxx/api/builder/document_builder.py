@@ -10,12 +10,12 @@ if TYPE_CHECKING:
 
 
 class DocumentBuilder:
-    pragma_once: bool
+    header: bool
     includes: list[DocumentInclude]
     declarations: list[Declaration]
 
-    def __init__(self, pragma_once: bool = False) -> None:
-        self.pragma_once = pragma_once
+    def __init__(self, header: bool = False) -> None:
+        self.header = header
         self.includes = []
         self.declarations = []
 
@@ -28,4 +28,4 @@ class DocumentBuilder:
         return self
 
     def build(self) -> Document:
-        return Document(self.pragma_once, self.includes, self.declarations)
+        return Document(self.header, self.includes, self.declarations)

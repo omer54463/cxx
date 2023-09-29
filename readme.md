@@ -48,7 +48,7 @@ get_even_odd_function = (
 )
 
 document = (
-    cxx.DocumentBuilder(pragma_once=True)
+    cxx.DocumentBuilder(header=True)
     .add_declaration(even_odd_enum.definition)
     .add_declaration(get_even_odd_function.definition)
     .build()

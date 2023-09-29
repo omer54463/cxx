@@ -12,7 +12,7 @@ class MinifiedFormatter(DocumentFormatter):
     def format(self, document: Document) -> str:
         lines: list[str] = []
 
-        if document.pragma_once:
+        if document.header:
             lines.append("#pragma once")
             self._add_line_break(lines)
 

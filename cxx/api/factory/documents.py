@@ -10,7 +10,7 @@ class Documents:
         declarations: list[Declaration] | None = None,
     ) -> Document:
         return Document(
-            pragma_once=True,
+            header=True,
             includes=[] if includes is None else includes,
             declarations=[] if declarations is None else declarations,
         )
@@ -21,7 +21,7 @@ class Documents:
         declarations: list[Declaration] | None = None,
     ) -> Document:
         return Document(
-            pragma_once=False,
+            header=False,
             includes=[] if includes is None else includes,
             declarations=[] if declarations is None else declarations,
         )
