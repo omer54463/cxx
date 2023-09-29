@@ -11,9 +11,9 @@ class MinifiedFormatter(DocumentFormatter):
             lines.append("#pragma once")
 
         for include in document.includes:
-            open_bracket = "<" if include.system else '"'
-            close_bracket = ">" if include.system else '"'
-            lines.append(f"#include {open_bracket}{include.path}{close_bracket}")
+            if not include.startswith("<") and not include.endswith(">"):
+                actual_include = f'"{include}"'
+            lines.append(f"#include {actual_include}")
 
         for declaration in document.declarations:
             lines.append(" ".join(serialize_declaration(declaration)))

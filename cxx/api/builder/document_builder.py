@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cxx.document.document import Document
-from cxx.document.document_include import DocumentInclude
 
 if TYPE_CHECKING:
     from cxx.declaration.declaration import Declaration
@@ -11,7 +10,7 @@ if TYPE_CHECKING:
 
 class DocumentBuilder:
     header: bool
-    includes: list[DocumentInclude]
+    includes: list[str]
     declarations: list[Declaration]
 
     def __init__(self, header: bool = False) -> None:
@@ -19,8 +18,8 @@ class DocumentBuilder:
         self.includes = []
         self.declarations = []
 
-    def add_include(self, path: str, system: bool = False) -> DocumentBuilder:
-        self.includes.append(DocumentInclude(path, system))
+    def add_include(self, path: str) -> DocumentBuilder:
+        self.includes.append(path)
         return self
 
     def add_declaration(self, declaration: Declaration) -> DocumentBuilder:

@@ -1,12 +1,11 @@
 from cxx.declaration.declaration import Declaration
 from cxx.document.document import Document
-from cxx.document.document_include import DocumentInclude
 
 
 class Documents:
     def header(
         self,
-        includes: list[DocumentInclude] | None = None,
+        includes: list[str] | None = None,
         declarations: list[Declaration] | None = None,
     ) -> Document:
         return Document(
@@ -17,7 +16,7 @@ class Documents:
 
     def source(
         self,
-        includes: list[DocumentInclude] | None = None,
+        includes: list[str] | None = None,
         declarations: list[Declaration] | None = None,
     ) -> Document:
         return Document(
