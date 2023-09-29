@@ -179,9 +179,10 @@ def serialize_literal(literal: Literal) -> Iterator[str]:
         case IntegerLiteral():
             yield from serialize_integer_literal(literal)
 
-        case StringLiteral(value):
+        case StringLiteral(value, wide):
+            prefix = "L" if wide else ""
             quote = '"""' if "\n" in value else '"'
-            yield f"{quote}{value}{quote}"
+            yield f"{prefix}{quote}{value}{quote}"
 
         case CharacterLiteral(value):
             yield f"'{value}'"
