@@ -57,7 +57,7 @@ class ClangFormatter(DocumentFormatter):
             ]
             configuration = check_output(arguments).decode()
 
-        configuration_path.write_text(configuration, encoding="ascii")
+        configuration_path.write_text(configuration)
         return temporary_directory_path
 
     def _setup_source(self, temporary_directory_path: Path, document: Document) -> Path:
@@ -76,4 +76,4 @@ class ClangFormatter(DocumentFormatter):
     ) -> str:
         arguments = [str(self.executable_path), str(temporary_source_path)]
         result_bytes = check_output(arguments, cwd=str(temporary_directory_path))
-        return result_bytes.decode()
+        return result_bytes.replace(b"\r", b"").decode()
